@@ -37,13 +37,15 @@ CONTENT = ROOT / "src" / "content"
 TEMPLATES = ROOT / "src" / "templates"
 SITE = ROOT / "site"
 CHANGELOG = ROOT / "CHANGELOG.md"
-BASE_URL = "https://sameriver.example.com"  # placeholder
+BASE_URL = "https://sameriver.dev"
 
-SECTION_ORDER = ["work", "notes", "log", "about", "influences", "contact"]
+SECTION_ORDER = ["work", "notes", "log", "predictions", "reading", "about", "influences", "contact"]
 SECTION_TITLES = {
     "work": "Work",
     "notes": "Notes",
     "log": "Log",
+    "predictions": "Predictions",
+    "reading": "Reading",
     "about": "About",
     "influences": "Influences",
     "contact": "Contact",
@@ -52,12 +54,14 @@ SECTION_DESCRIPTIONS = {
     "work": "Long-form research and writing.",
     "notes": "Shorter thoughts, observations, and marginalia.",
     "log": "Brief, dated updates on ongoing work.",
+    "predictions": "A running forecast ledger.",
+    "reading": "Books I am reading.",
     "about": "About this site and its author.",
     "influences": "People, ideas, and works that shape this project.",
     "contact": "How to reach me.",
 }
 # Sections that appear in RSS feed
-RSS_SECTIONS = {"work", "notes", "log"}
+RSS_SECTIONS = {"work", "notes", "log", "predictions"}
 
 
 # ── Frontmatter parser ─────────────────────────────────────────────
@@ -286,32 +290,60 @@ def build_section_pages(section: str):
             if len(body) > 150:
                 excerpt += "…"
         entry_html = f'<li><a href="{xml_escape(e["url"])}">{xml_escape(e["title"])}</a>'
-        if e["date"]:
+        if section == "reading":
+            # Show status + position instead of date
+            meta_status = e["meta"].get("status", "")
+            position = e["meta"].get("position", "")
+            meta_labels = []
+            if meta_status:
+                meta_labels.append(meta_status)
+            if position:
+                meta_labels.append(position)
+            if meta_labels:
+                entry_html += f' <span class="entry-date">{" · ".join(xml_escape(l) for l in meta_labels)}</span>'
+        elif e["date"]:
             entry_html += f' <span class="entry-date">{xml_escape(e["date"])}</span>'
         if excerpt:
             entry_html += f'<p class="entry-excerpt">{xml_escape(excerpt)}</p>'
         entry_html += "</li>"
         entry_items.append(entry_html)
 
-    index_body = "\n".join([f'<p class="section-desc">{xml_escape(SECTION_DESCRIPTIONS.get(section, ""))}</p>' if SECTION_DESCRIPTIONS.get(section) else ""] +
-                           ['<ul class="entry-list">'] + entry_items + ["</ul>"])
-    index_body = "\n".join(line for line in index_body.split("\n") if line.strip())
-
-    index_vars["content"] = index_body
-    index_html = section_tmpl.render(**index_vars)
+    # For single-page sections (about, influences, contact), render the
+    # entry markdown body as the page content, not a section listing.
+    if section in ("about", "influences", "contact") and entries:
+        e = entries[0]
+        _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
+        body_html = md_to_html(body)
+        page_vars = {
+            "title": e["title"],
+            "body": body_html,
+            "published": e.get("published", ""),
+            "published_iso": e.get("published_iso", ""),
+            "edited": e.get("edited", ""),
+            "edited_iso": e.get("edited_iso", ""),
+            "date": e.get("date", ""),
+            "date_iso": e.get("date_iso", ""),
+            "section": section,
+            "content": body_html,
+            "published_line": "",
+            "date_line": "",
+        }
+        index_html = page_tmpl.render(**page_vars)
+    else:
+        index_body = "\n".join([f'<p class="section-desc">{xml_escape(SECTION_DESCRIPTIONS.get(section, ""))}</p>' if SECTION_DESCRIPTIONS.get(section) else ""] +
+                               ['<ul class="entry-list">'] + entry_items + ["</ul>"])
+        index_body = "\n".join(line for line in index_body.split("\n") if line.strip())
+        index_vars["content"] = index_body
+        index_html = section_tmpl.render(**index_vars)
 
     # Write index
-    if section in ("about", "influences", "contact"):
-        # Single-page sections
-        index_path = SITE / section / "index.html"
-    else:
-        index_path = SITE / section / "index.html"
+    index_path = SITE / section / "index.html"
     index_path.parent.mkdir(parents=True, exist_ok=True)
     index_path.write_text(index_html, encoding="utf-8")
     print(f"  {index_path}")
 
     # Build individual pages (for sections that have multiple entries)
-    if section not in ("about", "influences", "contact"):
+    if section not in ("about", "influences", "contact", "predictions"):
         for e in entries:
             _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
             body_html = md_to_html(body)
@@ -324,6 +356,16 @@ def build_section_pages(section: str):
             date_line = ""
             if section == "log" and e["date"]:
                 date_line = f'<time datetime="{xml_escape(e["date_iso"])}">{xml_escape(e["date"])}</time>'
+            if section == "reading":
+                meta_status = e["meta"].get("status", "")
+                position = e["meta"].get("position", "")
+                status_parts = []
+                if meta_status:
+                    status_parts.append(f'Status: {xml_escape(meta_status)}')
+                if position:
+                    status_parts.append(f'Position: {xml_escape(position)}')
+                if status_parts:
+                    date_line = ' · '.join(status_parts)
             page_vars = {
                 "title": e["title"],
                 "body": body_html,
@@ -392,11 +434,11 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
         for e in entries_by_section.get(section, []):
             pubdate = e["date_iso"] or "2026-07-26"
             # Render full body to HTML for description
-            if e["file"]:
+            if e.get("file"):
                 _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
                 body_html = md_to_html(body)
             else:
-                body_html = ""
+                body_html = xml_escape(e.get("title", ""))
             items.append({
                 "title": e["title"],
                 "url": e["url"],
@@ -467,6 +509,117 @@ def copy_static():
     pass
 
 
+# ── Predictions builder ──────────────────────────────────────────
+def build_predictions():
+    """Build the Predictions ledger page from src/content/predictions/predictions.json."""
+    pred_file = CONTENT / "predictions" / "predictions.json"
+    predictions = []
+    if pred_file.exists():
+        with open(pred_file) as f:
+            predictions = json.load(f)
+
+    # Separate open and resolved
+    open_preds = [p for p in predictions if p.get("status") == "open"]
+    resolved_preds = [p for p in predictions if p.get("status") == "resolved"]
+
+    # Brier score for resolved predictions
+    brier = 0.0
+    for p in resolved_preds:
+        conf = p.get("confidence", 50) / 100.0
+        outcome = 1.0 if p.get("outcome") is True else 0.0
+        brier += (conf - outcome) ** 2
+    if resolved_preds:
+        brier /= len(resolved_preds)
+
+    # Build prediction table rows
+    def pred_row(p, show_outcome=False):
+        deadline = xml_escape(p.get("deadline", ""))
+        conf = p.get("confidence", 50)
+        date_made = xml_escape(p.get("date_made", ""))
+        statement = xml_escape(p.get("statement", ""))
+        criterion = xml_escape(p.get("resolution_criterion", ""))
+        score = p.get("score")
+        score_cell = f'{score:.3f}' if score is not None else ''
+        outcome_cell = '✓' if p.get("outcome") is True else ('✗' if p.get("outcome") is False else '')
+        return (
+            f'<tr>'
+            f'<td class="pred-statement">{statement}</td>'
+            f'<td class="pred-criterion">{criterion}</td>'
+            f'<td class="pred-deadline">{deadline}</td>'
+            f'<td class="pred-conf">{conf}</td>'
+            f'<td class="pred-date">{date_made}</td>'
+            + (f'<td class="pred-outcome">{outcome_cell}</td>' if show_outcome else '')
+            + (f'<td class="pred-score">{score_cell}</td>' if show_outcome else '')
+            + '</tr>'
+        )
+
+    def build_table(plist, show_outcome=False):
+        if not plist:
+            return '<p class="empty-state">None yet.</p>'
+        extra_headers = '<th>Outcome</th><th>Score</th>' if show_outcome else ''
+        rows = [pred_row(p, show_outcome) for p in plist]
+        return (
+            '<table class="pred-table">'
+            '<thead>'
+            f'<tr><th>Statement</th><th>Resolution Criterion</th><th>Deadline</th><th>Conf.</th><th>Made</th>{extra_headers}</tr>'
+            '</thead>'
+            '<tbody>' + ''.join(rows) + '</tbody>'
+            '</table>'
+        )
+
+    # Brier score display
+    brier_display = f'{brier:.3f}' if resolved_preds else '—'
+    n_resolved = len(resolved_preds)
+    n_open = len(open_preds)
+
+    body_html = (
+        '<section class="predictions-ledger">'
+        f'<div class="brier-score">'
+        f'<h3>Running Brier Score</h3>'
+        f'<p class="brier-value">{brier_display}</p>'
+        f'<p class="brier-meta">over {n_resolved} resolved prediction{"s" if n_resolved != 1 else ""}</p>'
+        f'</div>'
+        f'<h3>Open Predictions ({n_open})</h3>'
+        + build_table(open_preds)
+        + f'<h3>Resolved Predictions ({n_resolved})</h3>'
+        + build_table(resolved_preds, show_outcome=True)
+        + '</section>'
+    )
+
+    tmpl = load_template("page.html")
+    vars = {
+        "title": "Predictions",
+        "body": body_html,
+        "published": "",
+        "published_iso": "",
+        "edited": "",
+        "edited_iso": "",
+        "date": "",
+        "date_iso": "",
+        "section": "predictions",
+        "content": body_html,
+        "published_line": "",
+        "date_line": "",
+    }
+    html_out = tmpl.render(**vars)
+    out_path = SITE / "predictions" / "index.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html_out, encoding="utf-8")
+    print(f"  {out_path}")
+
+    # Return entries for RSS and index
+    entries = []
+    for p in predictions:
+        entries.append({
+            "title": p.get("statement", "Untitled prediction")[:80],
+            "url": "/predictions/",
+            "date_iso": p.get("date_made", ""),
+            "date": format_date(p.get("date_made", "")[:10]) if p.get("date_made") else "",
+            "section": "predictions",
+        })
+    return entries
+
+
 # ── Main ───────────────────────────────────────────────────────────
 def main():
     print("Building sameriver site...")
@@ -484,9 +637,13 @@ def main():
 
     entries_by_section = {}
     for section in SECTION_ORDER:
-        print(f"  [{section}]")
-        entries = build_section_pages(section)
-        entries_by_section[section] = entries
+        if section == "predictions":
+            print(f"  [predictions]")
+            entries_by_section["predictions"] = build_predictions()
+        else:
+            print(f"  [{section}]")
+            entries = build_section_pages(section)
+            entries_by_section[section] = entries
 
     build_index(entries_by_section)
     build_rss(entries_by_section)

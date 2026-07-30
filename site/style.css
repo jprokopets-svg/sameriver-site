@@ -8,6 +8,7 @@
   --fg-link: #ccc;
   --fg-link-hover: #fff;
   --accent: #b0b0b0;
+  --accent-river: #7aa5b8;
   --border: #2a2a2a;
   --font-body: Georgia, "Times New Roman", Times, serif;
   --font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", Consolas, monospace;
@@ -132,10 +133,12 @@ main a {
   color: var(--fg-link);
   text-decoration: underline;
   text-underline-offset: 2px;
+  text-decoration-color: var(--accent-river);
 }
 
 main a:hover {
   color: var(--fg-link-hover);
+  text-decoration-color: var(--accent-river);
 }
 
 main ul, main ol {
@@ -292,4 +295,88 @@ main figcaption {
 
 .home-section li {
   margin-bottom: 0.5rem;
+}
+
+/* ---- Predictions ledger ---- */
+.brier-score {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-align: center;
+}
+
+.brier-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  color: var(--accent-river);
+  margin: 0.5rem 0;
+}
+
+.brier-meta {
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+
+.pred-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+}
+
+.pred-table th,
+.pred-table td {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pred-table th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  border-bottom: 2px solid var(--border);
+}
+
+.pred-table .pred-statement {
+  min-width: 12rem;
+}
+
+.pred-table .pred-criterion {
+  color: var(--fg-dim);
+  font-size: 0.8rem;
+}
+
+.pred-table .pred-conf {
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.pred-table .pred-deadline,
+.pred-table .pred-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  white-space: nowrap;
+}
+
+.pred-table .pred-outcome {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.pred-table .pred-score {
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.empty-state {
+  color: var(--fg-dim);
+  font-style: italic;
+  margin-bottom: 1.5rem;
 }
