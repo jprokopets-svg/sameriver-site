@@ -1,3 +1,9 @@
+---
+title: "The Handoff Study: What Survives When an Agent Stops"
+published: 2026-07-30
+status: published
+---
+
 # The Handoff Study: What Survives When an Agent Stops
 
 <p class="post-meta"><em>handoff-bench study 2 · 144 runs · one executing agent · full data, code, and this study's own trust incident in <a href="https://github.com/jprokopets-svg/handoff-bench">the repository</a></em></p>

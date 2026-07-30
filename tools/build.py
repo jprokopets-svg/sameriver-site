@@ -297,11 +297,12 @@ def collect_entries(section: str) -> list[dict]:
             "section": section,
         })
 
-    # Sort by date descending for log, else by date descending
+    # Sort order: Work ascending (chronological), all others descending (reverse-chronological)
+    ASCENDING_SECTIONS = {"work"}
     def sort_key(e):
         d = e["date_iso"] or "0000-00-00"
         return d
-    entries.sort(key=sort_key, reverse=True)
+    entries.sort(key=sort_key, reverse=section not in ASCENDING_SECTIONS)
     return entries
 
 
@@ -776,7 +777,12 @@ def first_paragraph(text: str) -> str:
         # Skip lines that are entirely italic (metadata like *study ...*)
         if line.startswith('*') and line.endswith('*') and line.count('*') == 2:
             continue
-        # Got a real paragraph
+        # Got a real paragraph — strip markdown formatting for clean excerpt
+        line = re.sub(r'\*\*(.+?)\*\*', r'\1', line)  # **bold**
+        line = re.sub(r'\*(.+?)\*', r'\1', line)       # *italic*
+        line = re.sub(r'\[([^]]+)\]\([^)]+\)', r'\1', line)  # [text](url) → text
+        line = re.sub(r'_(.+?)_', r'\1', line)           # _italic_
+        line = re.sub(r'`([^`]+)`', r'\1', line)         # `code`
         # Truncate cleanly at sentence boundary
         if len(line) > 300:
             # Find last sentence end before 300
