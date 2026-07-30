@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="content-page">
+  <header class="article-header">
+    <h2>{{ title }}</h2>
+    <p class="dates">{{ published_line }}{{ date_line }}</p>
+  </header>
+  <div class="body">
+{{ body }}
+  </div>
+</article>
+{% endblock %}

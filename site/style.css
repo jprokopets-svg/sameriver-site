@@ -1,0 +1,278 @@
+/* sameriver — dark, near-monochrome, document-like */
+/* system serif for body, monospace for data */
+
+:root {
+  --bg: #0f0f0f;
+  --fg: #e0e0e0;
+  --fg-dim: #888;
+  --fg-link: #ccc;
+  --fg-link-hover: #fff;
+  --accent: #b0b0b0;
+  --border: #2a2a2a;
+  --font-body: Georgia, "Times New Roman", Times, serif;
+  --font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", Consolas, monospace;
+  --max-width: 65ch;
+  --gap: 1.618rem;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 112.5%; /* ~18px base */
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ---- Masthead ---- */
+.masthead {
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.masthead h1 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.masthead h1 a {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.masthead h1 a:hover {
+  color: var(--fg-link-hover);
+}
+
+.masthead-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.masthead-subtitle a {
+  color: var(--fg-dim);
+  text-decoration: none;
+}
+
+.masthead-subtitle a:hover {
+  color: var(--fg-link-hover);
+}
+
+/* ---- Navigation ---- */
+.nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.nav a {
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+
+.nav a:hover {
+  color: var(--fg-link-hover);
+}
+
+/* ---- Main content ---- */
+main {
+  margin-bottom: 3rem;
+}
+
+main h2 {
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+main h3 {
+  font-size: 1.15rem;
+  font-weight: 400;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+main h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+main p {
+  margin-bottom: 1rem;
+}
+
+main a {
+  color: var(--fg-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+main a:hover {
+  color: var(--fg-link-hover);
+}
+
+main ul, main ol {
+  margin-left: 0;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+main li {
+  margin-bottom: 0.25rem;
+}
+
+main blockquote {
+  border-left: 2px solid var(--border);
+  margin: 1.5rem 0;
+  padding: 0.5rem 1rem;
+  color: var(--fg-dim);
+}
+
+main code {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: #1a1a1a;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+main pre {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: #1a1a1a;
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+main pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+main hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+main img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---- Article header ---- */
+.article-header {
+  margin-bottom: 2rem;
+}
+
+.article-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.dates {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+}
+
+/* ---- Section index ---- */
+.section-desc {
+  color: var(--fg-dim);
+  margin-bottom: 2rem;
+}
+
+.entry-list {
+  list-style: none;
+  padding: 0;
+}
+
+.entry-list li {
+  margin-bottom: 1rem;
+}
+
+.entry-list a {
+  font-size: 1.05rem;
+}
+
+.entry-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-left: 0.5rem;
+}
+
+.entry-excerpt {
+  font-size: 0.9rem;
+  color: var(--fg-dim);
+  margin-top: 0.15rem;
+}
+
+/* ---- Footer ---- */
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+
+.footer a {
+  color: var(--fg-link);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--fg-link-hover);
+}
+
+/* ---- Index page specific ---- */
+.home-section {
+  margin-bottom: 2.5rem;
+}
+
+.home-section h3 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fg-dim);
+  margin-bottom: 0.75rem;
+}
+
+.home-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.home-section li {
+  margin-bottom: 0.5rem;
+}
