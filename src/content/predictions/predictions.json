@@ -51,9 +51,10 @@
     "deadline": "2026-10-31",
     "confidence": 80,
     "date_made": "2026-07-29",
-    "status": "open",
-    "outcome": null,
-    "score": null
+    "status": "resolved",
+    "outcome": false,
+    "score": 0.64,
+    "resolution_note": "Resolved early by author's choice: the planned study was found substantially preempted (Binder et al. 2024 and successors) and was replaced by the Handoff Study. Scored as a miss at 80% confidence — the ledger does not care that the reason was good."
   },
   {
     "id": "pred-6",
