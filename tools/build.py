@@ -39,13 +39,14 @@ SITE = ROOT / "site"
 CHANGELOG = ROOT / "CHANGELOG.md"
 BASE_URL = "https://sameriver.dev"
 
-SECTION_ORDER = ["work", "notes", "log", "predictions", "reading", "about", "influences", "contact"]
+SECTION_ORDER = ["work", "notes", "log", "predictions", "reading", "art", "about", "influences", "contact"]
 SECTION_TITLES = {
     "work": "Work",
     "notes": "Notes",
     "log": "Log",
     "predictions": "Predictions",
     "reading": "Reading",
+    "art": "Art",
     "about": "About",
     "influences": "Influences",
     "contact": "Contact",
@@ -440,7 +441,7 @@ def build_index(entries_by_section: dict[str, list[dict]]):
         title = SECTION_TITLES.get(section, section.title())
         section_url = f"/{section}/"
 
-        if not entries and section not in ("predictions", "reading"):
+        if not entries and section not in ("predictions", "reading", "art"):
             continue
 
         if section in ("work", "notes", "log"):
@@ -954,6 +955,8 @@ def main():
         if section == "predictions":
             print(f"  [predictions]")
             entries_by_section["predictions"] = build_predictions()
+        elif section == "art":
+            entries_by_section["art"] = []  # built separately via build_art()
         else:
             print(f"  [{section}]")
             entries = build_section_pages(section)
