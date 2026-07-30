@@ -1,7 +1,5 @@
 ---
-title: "Heraclitus and the River of Information"
-published: 2026-07-25
-edited: 2026-07-25
+title: "DRAFT PLACEHOLDER 6"
 status: draft
 ---
 

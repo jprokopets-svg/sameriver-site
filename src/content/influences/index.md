@@ -1,7 +1,5 @@
 ---
-title: "Influences"
-published: 2026-07-26
-edited: 2026-07-26
+title: "Influences (DRAFT)"
 status: draft
 ---
 

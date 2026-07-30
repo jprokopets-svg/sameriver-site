@@ -1,7 +1,5 @@
 ---
-title: "More on Calibration"
-published: 2026-07-22
-edited: 2026-07-22
+title: "DRAFT PLACEHOLDER 7"
 status: draft
 ---
 

@@ -1,7 +1,5 @@
 ---
-title: "Why 'sameriver'?"
-published: 2026-07-26
-edited: 2026-07-26
+title: "DRAFT PLACEHOLDER 5 (stub: why sameriver?)"
 status: draft
 ---
 

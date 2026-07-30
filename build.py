@@ -386,16 +386,22 @@ def build_index(entries_by_section: dict[str, list[dict]]):
 
 
 def build_rss(entries_by_section: dict[str, list[dict]]):
-    """Build RSS feed."""
+    """Build RSS feed with full post content."""
     items = []
     for section in RSS_SECTIONS:
         for e in entries_by_section.get(section, []):
             pubdate = e["date_iso"] or "2026-07-26"
+            # Render full body to HTML for description
+            if e["file"]:
+                _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
+                body_html = md_to_html(body)
+            else:
+                body_html = ""
             items.append({
                 "title": e["title"],
                 "url": e["url"],
                 "pubdate": format_rss_date(pubdate),
-                "description": xml_escape(e.get("title", "")),
+                "description": body_html,
             })
 
     items.sort(key=lambda x: x["pubdate"], reverse=True)
@@ -418,7 +424,7 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
             f"    <link>{BASE_URL}{item['url']}</link>",
             f"    <guid>{BASE_URL}{item['url']}</guid>",
             f"    <pubDate>{item['pubdate']}</pubDate>",
-            f"    <description>{xml_escape(item['description'])}</description>",
+            f"    <description><![CDATA[{item['description']}]]></description>",
             "  </item>",
         ])
     rss_parts.extend(["</channel>", "</rss>"])

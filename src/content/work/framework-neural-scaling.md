@@ -1,7 +1,5 @@
 ---
-title: "A Framework for Understanding Neural Scaling"
-published: 2026-07-15
-edited: 2026-07-15
+title: "DRAFT PLACEHOLDER 3"
 status: draft
 ---
 

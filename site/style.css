@@ -29,7 +29,7 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
-  line-height: 1.7;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -189,6 +189,23 @@ main hr {
 main img {
   max-width: 100%;
   height: auto;
+}
+
+main figure {
+  margin: 1.5rem 0;
+}
+
+main figure img {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+main figcaption {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-top: 0.4rem;
+  text-align: center;
 }
 
 /* ---- Article header ---- */

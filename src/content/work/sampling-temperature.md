@@ -1,7 +1,5 @@
 ---
-title: "Why Sampling Temperature Matters More Than You Think"
-published: 2026-07-05
-edited: 2026-07-05
+title: "DRAFT PLACEHOLDER 4"
 status: draft
 ---
 

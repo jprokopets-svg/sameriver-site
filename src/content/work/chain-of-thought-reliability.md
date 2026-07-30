@@ -1,7 +1,5 @@
 ---
-title: "On the Relationship Between Chain-of-Thought and Reliability"
-published: 2026-07-10
-edited: 2026-07-22
+title: "DRAFT PLACEHOLDER 2"
 status: draft
 ---
 

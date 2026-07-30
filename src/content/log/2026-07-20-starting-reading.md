@@ -1,6 +1,5 @@
 ---
-title: "Started Reading for Calibration Project"
-date: 2026-07-20
+title: "DRAFT PLACEHOLDER — Log entry 3"
 status: draft
 ---
 

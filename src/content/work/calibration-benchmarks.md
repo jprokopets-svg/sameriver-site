@@ -1,7 +1,5 @@
 ---
-title: "Calibration Benchmarks Are Not What They Seem"
-published: 2026-07-20
-edited: 2026-07-20
+title: "DRAFT PLACEHOLDER 1"
 status: draft
 ---
 

@@ -1,6 +1,5 @@
 ---
-title: "First Thoughts on Site Design"
-date: 2026-07-26
+title: "DRAFT PLACEHOLDER — Log entry 2"
 status: draft
 ---
 

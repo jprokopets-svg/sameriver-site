@@ -1,7 +1,5 @@
 ---
-title: "About"
-published: 2026-07-26
-edited: 2026-07-26
+title: "About (DRAFT)"
 status: draft
 ---
 
