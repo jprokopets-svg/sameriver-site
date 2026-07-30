@@ -499,7 +499,7 @@ def build_index(entries_by_section: dict[str, list[dict]]):
                 current_pos = ""
                 for e in entries:
                     status = e["meta"].get("status", "")
-                    if status and status.lower() == "reading":
+                    if status and status.lower() in ("reading", "in progress"):
                         current_book = e["title"]
                         current_pos = e["meta"].get("position", "")
                         break
