@@ -340,6 +340,11 @@ def build_section_pages(section: str):
         e = entries[0]
         _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
         body_html = md_to_html(body)
+        published_line = ""
+        if e.get("published"):
+            published_line = f'Published: <time datetime="{xml_escape(e["published_iso"])}">{xml_escape(e["published"])}</time>'
+            if e.get("edited") and e.get("edited") != e.get("published"):
+                published_line += f' · Last edited: <time datetime="{xml_escape(e["edited_iso"])}">{xml_escape(e["edited"])}</time>'
         page_vars = {
             "title": e["title"],
             "body": body_html,
@@ -351,7 +356,7 @@ def build_section_pages(section: str):
             "date_iso": e.get("date_iso", ""),
             "section": section,
             "content": body_html,
-            "published_line": "",
+            "published_line": published_line,
             "date_line": "",
         }
         index_html = page_tmpl.render(**page_vars)
