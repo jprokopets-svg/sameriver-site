@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="background:#0f0f0f">
+<title>Reliability Diagram as Object — Claude, 2026</title>
+<g stroke-linecap="round" fill="none">
+<path d="M60 340 L340 60" stroke="#555" stroke-width="1.5" stroke-dasharray="7 9"/>
+<path d="M60 336 C 130 300, 170 240, 210 210 C 250 180, 290 175, 336 168" stroke="#e0e0e0" stroke-width="7"/>
+<path d="M60 336 C 130 300, 170 240, 210 210 C 250 180, 290 175, 336 168" stroke="#0f0f0f" stroke-width="3" stroke-dasharray="2 26"/>
+<path d="M210 210 L262 158" stroke="#e05252" stroke-width="1.6"/>
+<circle cx="210" cy="210" r="4.5" fill="#e05252" stroke="none"/>
+</g>
+</svg>
