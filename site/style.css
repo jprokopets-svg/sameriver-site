@@ -52,11 +52,23 @@ body {
   font-size: 1.8rem;
   font-weight: 400;
   letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.river-mark {
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .masthead h1 a {
   color: var(--fg);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .masthead h1 a:hover {
@@ -292,17 +304,23 @@ main figcaption {
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--fg-dim);
+  color: var(--accent-river);
   margin-bottom: 0.75rem;
 }
 
 .home-section h3 a {
-  color: var(--fg-dim);
+  color: var(--accent-river);
   text-decoration: none;
 }
 
 .home-section h3 a:hover {
   color: var(--fg-link-hover);
+}
+
+/* ---- Section heading left border ---- */
+.section-index h2 {
+  border-left: 2px solid var(--accent-river);
+  padding-left: 0.75rem;
 }
 
 .home-section ul {

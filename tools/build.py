@@ -650,9 +650,10 @@ def build_changelog():
 def first_paragraph(text: str) -> str:
     """Extract the first real paragraph from markdown text.
 
-    Skips: DRAFT markers, horizontal rules, images, blockquotes, headings,
-    code fences, and empty lines. Returns the first non-empty paragraph
-    with inline formatting preserved as plain text.
+    Skips: DRAFT markers, HTML metadata (post-meta), italic-only lines,
+    horizontal rules, images, blockquotes, headings, code fences, and
+    empty lines. Returns the first non-empty paragraph with inline
+    formatting preserved as plain text.
     """
     # Remove frontmatter
     text = re.sub(r'^---.*?\n---\n', '', text, flags=re.DOTALL).strip()
@@ -675,6 +676,12 @@ def first_paragraph(text: str) -> str:
         if line.startswith('```') or line.startswith('~~~'):
             continue
         if line.startswith('- ') or line.startswith('* ') or line.startswith('1.'):
+            continue
+        # Skip HTML metadata lines (post-meta, bylines, etc.)
+        if line.startswith('<p class="post-meta"'):
+            continue
+        # Skip lines that are entirely italic (metadata like *study ...*)
+        if line.startswith('*') and line.endswith('*') and line.count('*') == 2:
             continue
         # Got a real paragraph
         # Truncate cleanly at sentence boundary
