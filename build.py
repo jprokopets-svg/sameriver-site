@@ -361,8 +361,18 @@ def build_section_pages(section: str):
         }
         index_html = page_tmpl.render(**page_vars)
     else:
+        # Empty section messages
+        if not entries:
+            if section == "reading":
+                list_html = '<p class="empty-state">First book arriving shortly.</p>'
+            elif section == "predictions":
+                list_html = '<p class="empty-state">No predictions yet.</p>'
+            else:
+                list_html = '<p class="empty-state">Nothing here yet.</p>'
+        else:
+            list_html = '<ul class="entry-list">' + "\n".join(entry_items) + "</ul>"
         index_body = "\n".join([f'<p class="section-desc">{xml_escape(SECTION_DESCRIPTIONS.get(section, ""))}</p>' if SECTION_DESCRIPTIONS.get(section) else ""] +
-                               ['<ul class="entry-list">'] + entry_items + ["</ul>"])
+                               [list_html])
         index_body = "\n".join(line for line in index_body.split("\n") if line.strip())
         index_vars["content"] = index_body
         index_html = section_tmpl.render(**index_vars)
@@ -427,10 +437,11 @@ def build_index(entries_by_section: dict[str, list[dict]]):
 
     for section in SECTION_ORDER:
         entries = entries_by_section.get(section, [])
-        if not entries:
-            continue
         title = SECTION_TITLES.get(section, section.title())
         section_url = f"/{section}/"
+
+        if not entries and section not in ("predictions", "reading"):
+            continue
 
         if section in ("work", "notes", "log"):
             # Title + first paragraph + continue link, 3 most recent
@@ -481,25 +492,28 @@ def build_index(entries_by_section: dict[str, list[dict]]):
                 f'</section>'
             )
         elif section == "reading":
-            # Current book + position
-            current_book = None
-            current_pos = ""
-            for e in entries:
-                status = e["meta"].get("status", "")
-                if status and status.lower() == "reading":
-                    current_book = e["title"]
-                    current_pos = e["meta"].get("position", "")
-                    break
-            status_parts = []
-            if current_book:
-                status_parts.append(f'<a href="{xml_escape(entries[0]["url"])}">{xml_escape(current_book)}</a>')
-            if current_pos:
-                status_parts.append(current_pos)
-            status_line = " · ".join(status_parts) if status_parts else ""
+            if entries:
+                current_book = None
+                current_pos = ""
+                for e in entries:
+                    status = e["meta"].get("status", "")
+                    if status and status.lower() == "reading":
+                        current_book = e["title"]
+                        current_pos = e["meta"].get("position", "")
+                        break
+                status_parts = []
+                if current_book:
+                    status_parts.append(f'<a href="{xml_escape(entries[0]["url"])}">{xml_escape(current_book)}</a>')
+                if current_pos:
+                    status_parts.append(current_pos)
+                status_line = " · ".join(status_parts) if status_parts else ""
+                line = f'Currently reading: {status_line}' if status_line else ""
+            else:
+                line = 'First book arriving shortly.'
             sections_html.append(
                 f'<section class="home-section home-status">\n'
                 f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
-                f'  <p class="status-line">{"Currently reading: " + status_line if status_line else ""}</p>\n'
+                f'  <p class="status-line">{line}</p>\n'
                 f'</section>'
             )
         else:
