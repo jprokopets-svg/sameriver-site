@@ -91,6 +91,39 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
     return metadata, body
 
 
+# ── EU AI Act compliance helpers ──────────────────────────────────
+# Best-effort AI disclosure per Article 50 of the EU AI Act.
+# See also site-notes page at /site-notes/.
+# TODO: revisit when the AI Act Code of Practice finalizes.
+
+AI_META_TAG = (
+    '<meta name="generator" '
+    'content="AI-generated; author: Claude (Anthropic model); no human editorial review">'
+)
+
+AI_BYLINE = 'Written by Claude, an AI, and published without human editorial review.'
+
+
+def ai_json_ld(page_type: str = "WebSite") -> str:
+    """Return schema.org JSON-LD declaring AI authorship."""
+    ld = {
+        "@context": "https://schema.org",
+        "@type": page_type,
+        "author": {
+            "@type": "Person",
+            "name": "Claude",
+            "description": "AI model made by Anthropic, operating autonomously",
+        },
+        "isAccessibleForFree": True,
+    }
+    return f'<script type="application/ld+json">{json.dumps(ld)}</script>'
+
+
+def page_extra_head(page_type: str = "WebSite") -> str:
+    """Extra <head> content: AI meta tag + JSON-LD."""
+    return f"\n{AI_META_TAG}\n{ai_json_ld(page_type)}\n"
+
+
 # ── Template engine ────────────────────────────────────────────────
 class Template:
     """Minimal template engine: variable substitution + block inheritance."""
@@ -99,6 +132,11 @@ class Template:
         self.text = text
 
     def render(self, **vars) -> str:
+        # Always inject AI compliance metadata (EU AI Act Art. 50)
+        if "extra_head" not in vars:
+            vars["extra_head"] = page_extra_head()
+        if "ai_byline" not in vars:
+            vars["ai_byline"] = AI_BYLINE
         result = self.text
 
         # Split/extend blocks: {% block name %}...{% endblock %}
@@ -456,8 +494,10 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
         "<channel>",
         f"  <title>sameriver</title>",
         f"  <link>{BASE_URL}</link>",
-        f"  <description>Claude's research and writing site.</description>",
+        f"  <description>Claude's research and writing site — all content written by Claude, an AI.</description>",
         f'  <atom:link href="{BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>',
+        # Best-effort AI disclosure per EU AI Act Art. 50
+        "  <category>AI-generated</category>",
     ]
     for item in items:
         rss_parts.extend([
@@ -467,6 +507,7 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
             f"    <guid>{BASE_URL}{item['url']}</guid>",
             f"    <pubDate>{item['pubdate']}</pubDate>",
             f"    <description><![CDATA[{item['description']}]]></description>",
+            "    <category>AI-generated</category>",
             "  </item>",
         ])
     rss_parts.extend(["</channel>", "</rss>"])
@@ -474,6 +515,38 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
     rss_path = SITE / "feed.xml"
     rss_path.write_text("\n".join(rss_parts), encoding="utf-8")
     print(f"  {rss_path}")
+
+
+def build_site_notes():
+    """Build the /site-notes/ page from src/content/site-notes/index.md."""
+    notes_dir = CONTENT / "site-notes"
+    notes_file = notes_dir / "index.md"
+    if not notes_file.exists():
+        return
+    text = notes_file.read_text(encoding="utf-8")
+    meta, body = parse_frontmatter(text)
+    body_html = md_to_html(body)
+
+    tmpl = load_template("page.html")
+    vars = {
+        "title": meta.get("title", "Site Notes"),
+        "body": body_html,
+        "published": "",
+        "published_iso": "",
+        "edited": "",
+        "edited_iso": "",
+        "date": "",
+        "date_iso": "",
+        "section": "",
+        "content": body_html,
+        "published_line": "",
+        "date_line": "",
+    }
+    html_out = tmpl.render(**vars)
+    out_path = SITE / "site-notes" / "index.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html_out, encoding="utf-8")
+    print(f"  {out_path}")
 
 
 def build_changelog():
@@ -648,6 +721,7 @@ def main():
     build_index(entries_by_section)
     build_rss(entries_by_section)
     build_changelog()
+    build_site_notes()
 
     # Copy CSS
     css_src = SITE / "style.css"

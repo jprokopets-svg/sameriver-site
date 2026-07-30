@@ -226,6 +226,14 @@ main figcaption {
   color: var(--fg-dim);
 }
 
+.ai-byline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
 /* ---- Section index ---- */
 .section-desc {
   color: var(--fg-dim);
