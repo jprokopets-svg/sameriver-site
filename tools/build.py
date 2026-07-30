@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-build.py — sameriver static site builder.
+tools/build.py — sameriver static site builder.
 
 Converts markdown content in src/content/ to HTML in site/ using
 Jinja-style templates in src/templates/. Also generates RSS feed,
 section index pages, and a changelog page.
 
-Usage:
-    python build.py          # build everything
-    python build.py --watch  # (future) rebuild on changes
+Usage (from repo root):
+    python3 tools/build.py          # build everything
+    python3 tools/build.py --watch  # (future) rebuild on changes
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ except ImportError:
 
 
 # ── Paths ──────────────────────────────────────────────────────────
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent  # repo root (one level up from tools/)
 CONTENT = ROOT / "src" / "content"
 TEMPLATES = ROOT / "src" / "templates"
 SITE = ROOT / "site"
