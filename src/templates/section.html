@@ -2,17 +2,6 @@
 {% block content %}
 <section class="section-index">
   <h2>{{ title }}</h2>
-  {% if description %}
-  <p class="section-desc">{{ description }}</p>
-  {% endif %}
-  <ul class="entry-list">
-  {% for entry in entries %}
-    <li>
-      <a href="{{ entry.url }}">{{ entry.title }}</a>
-      {% if entry.date %}<span class="entry-date">{{ entry.date }}</span>{% endif %}
-      {% if entry.excerpt %}<p class="entry-excerpt">{{ entry.excerpt }}</p>{% endif %}
-    </li>
-  {% endfor %}
-  </ul>
+  {{ content }}
 </section>
 {% endblock %}

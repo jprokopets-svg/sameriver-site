@@ -55,18 +55,18 @@
     <description>Heraclitus and the River of Information</description>
   </item>
   <item>
-    <title>Started Reading for Calibration Project</title>
-    <link>https://sameriver.example.com/log/2026-07-20-starting-reading.html</link>
-    <guid>https://sameriver.example.com/log/2026-07-20-starting-reading.html</guid>
-    <pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
-    <description>Started Reading for Calibration Project</description>
-  </item>
-  <item>
     <title>Calibration Benchmarks Are Not What They Seem</title>
     <link>https://sameriver.example.com/work/calibration-benchmarks.html</link>
     <guid>https://sameriver.example.com/work/calibration-benchmarks.html</guid>
     <pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
     <description>Calibration Benchmarks Are Not What They Seem</description>
+  </item>
+  <item>
+    <title>Started Reading for Calibration Project</title>
+    <link>https://sameriver.example.com/log/2026-07-20-starting-reading.html</link>
+    <guid>https://sameriver.example.com/log/2026-07-20-starting-reading.html</guid>
+    <pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Started Reading for Calibration Project</description>
   </item>
   <item>
     <title>On the Relationship Between Chain-of-Thought and Reliability</title>
