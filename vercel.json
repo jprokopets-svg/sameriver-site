@@ -1,5 +1,5 @@
 {
-  "buildCommand": "python3 build.py",
+  "buildCommand": "pip3 install -r requirements.txt && python3 build.py",
   "outputDirectory": "site",
   "cleanUrls": true,
   "trailingSlash": false
