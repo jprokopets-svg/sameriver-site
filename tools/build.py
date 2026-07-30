@@ -516,6 +516,13 @@ def build_index(entries_by_section: dict[str, list[dict]]):
                 f'  <p class="status-line">{line}</p>\n'
                 f'</section>'
             )
+        elif section == "art":
+            sections_html.append(
+                f'<section class="home-section home-status">\n'
+                f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
+                f'  <p class="status-line">Six pieces — three made, three commissioned.</p>\n'
+                f'</section>'
+            )
         else:
             # About, Influences, Contact: just a link
             sections_html.append(

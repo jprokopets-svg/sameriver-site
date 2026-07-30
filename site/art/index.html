@@ -24,6 +24,7 @@
         <li><a href="/log/">Log</a></li>
         <li><a href="/predictions/">Predictions</a></li>
         <li><a href="/reading/">Reading</a></li>
+        <li><a href="/art/">Art</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="/influences/">Influences</a></li>
         <li><a href="/contact/">Contact</a></li>
@@ -38,21 +39,19 @@
   <div class="art-svg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" style="background:#0f0f0f">
 <title>Wake — Claude, 2026</title>
-<style>
-@keyframes breathe{0%{transform:translateX(-40%)}50%{transform:translateX(0)}100%{transform:translateX(40%)}}
-.mover{animation:breathe 14s ease-in-out infinite alternate}
-</style>
 <defs>
-<linearGradient id="resolve" x1="0" x2="1">
-<stop offset="0" stop-opacity="0.08"/>
-<stop offset="0.35" stop-opacity="0.85"/>
-<stop offset="0.55" stop-opacity="0.95"/>
-<stop offset="0.75" stop-opacity="0.4"/>
-<stop offset="1" stop-opacity="0.05"/>
-</linearGradient>
-<mask id="m"><rect width="900" height="300" fill="url(#resolve)"/></mask>
+<radialGradient id="sweep" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#fff" stop-opacity="0.95"/>
+<stop offset="30%" stop-color="#fff" stop-opacity="0.85"/>
+<stop offset="60%" stop-color="#fff" stop-opacity="0.4"/>
+<stop offset="100%" stop-color="#fff" stop-opacity="0.02"/>
+</radialGradient>
+<mask id="m">
+<rect x="-200" y="0" width="600" height="300" fill="url(#sweep)">
+<animate attributeName="x" values="-200;500;-200" dur="14s" repeatCount="indefinite"/>
+</rect>
+</mask>
 </defs>
-<g class="mover"><rect width="900" height="300" fill="url(#resolve)" mask="url(#m)"/></g>
 <g mask="url(#m)" stroke="#e0e0e0" stroke-width="2.2" stroke-linecap="round">
 <g transform="translate(0,52)"><path d="M30 0l26 0" transform="rotate(9 43 0)"/><path d="M80 2l18 0" transform="rotate(-14 89 2)"/><path d="M128 -3l30 0" transform="rotate(5 143 -3)"/><path d="M190 1l22 0"/><path d="M240 0l34 0"/><path d="M300 0l26 0"/><path d="M352 0l40 0"/><path d="M416 0l24 0"/><path d="M464 0l36 0"/><path d="M524 0l28 0"/><path d="M576 0l22 0"/><path d="M622 1l30 0" transform="rotate(-4 637 1)"/><path d="M680 -2l20 0" transform="rotate(11 690 -2)"/><path d="M730 3l26 0" transform="rotate(-8 743 3)"/><path d="M790 0l18 0" transform="rotate(15 799 0)"/></g>
 <g transform="translate(0,102)" stroke-width="2.6"><path d="M22 2l20 0" transform="rotate(-12 32 2)"/><path d="M70 -1l32 0" transform="rotate(7 86 -1)"/><path d="M130 0l24 0" transform="rotate(-3 142 0)"/><path d="M186 0l38 0"/><path d="M248 0l22 0"/><path d="M296 0l44 0"/><path d="M364 0l26 0"/><path d="M414 0l32 0"/><path d="M470 0l24 0"/><path d="M520 0l40 0"/><path d="M584 0l20 0"/><path d="M630 2l28 0" transform="rotate(6 644 2)"/><path d="M684 -2l24 0" transform="rotate(-10 696 -2)"/><path d="M738 1l30 0" transform="rotate(4 753 1)"/><path d="M796 -3l16 0" transform="rotate(-16 804 -3)"/></g>
