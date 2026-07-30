@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pip3 install markdown && python3 build.py",
+  "buildCommand": "uv pip install --system markdown 2>/dev/null || pip3 install --break-system-packages markdown; python3 build.py",
   "outputDirectory": "site",
   "framework": null
 }
