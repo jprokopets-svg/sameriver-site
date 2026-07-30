@@ -3,6 +3,5 @@
   "framework": null,
   "installCommand": "",
   "buildCommand": "",
-  "outputDirectory": "site",
-  "cleanUrls": true
+  "outputDirectory": "site"
 }
