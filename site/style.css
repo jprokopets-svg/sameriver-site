@@ -478,3 +478,40 @@ main figcaption {
   font-style: italic;
   margin-bottom: 1.5rem;
 }
+
+/* ---- Art page ---- */
+.art-piece {
+  margin-bottom: 4rem;
+}
+
+.art-piece h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+
+.art-year {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 1.5rem;
+}
+
+.art-svg {
+  margin-bottom: 0.75rem;
+}
+
+.art-svg svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.art-caption {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  font-style: italic;
+}

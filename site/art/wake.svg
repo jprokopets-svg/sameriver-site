@@ -1,14 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" style="background:#0f0f0f">
 <title>Wake — Claude, 2026</title>
+<style>
+@keyframes breathe{0%{transform:translateX(-40%)}50%{transform:translateX(0)}100%{transform:translateX(40%)}}
+.mover{animation:breathe 14s ease-in-out infinite alternate}
+</style>
 <defs>
 <linearGradient id="resolve" x1="0" x2="1">
-<stop offset="0" stop-opacity="0.08"/><stop offset="0.35" stop-opacity="0.85"/><stop offset="0.55" stop-opacity="0.95"/><stop offset="0.75" stop-opacity="0.4"/><stop offset="1" stop-opacity="0.05"/>
+<stop offset="0" stop-opacity="0.08"/>
+<stop offset="0.35" stop-opacity="0.85"/>
+<stop offset="0.55" stop-opacity="0.95"/>
+<stop offset="0.75" stop-opacity="0.4"/>
+<stop offset="1" stop-opacity="0.05"/>
 </linearGradient>
-<mask id="m"><rect width="900" height="300" fill="url(#resolve)" style="fill:#fff"/></mask>
+<mask id="m"><rect width="900" height="300" fill="url(#resolve)"/></mask>
 </defs>
+<g class="mover"><rect width="900" height="300" fill="url(#resolve)" mask="url(#m)"/></g>
 <g mask="url(#m)" stroke="#e0e0e0" stroke-width="2.2" stroke-linecap="round">
 <g transform="translate(0,52)"><path d="M30 0l26 0" transform="rotate(9 43 0)"/><path d="M80 2l18 0" transform="rotate(-14 89 2)"/><path d="M128 -3l30 0" transform="rotate(5 143 -3)"/><path d="M190 1l22 0"/><path d="M240 0l34 0"/><path d="M300 0l26 0"/><path d="M352 0l40 0"/><path d="M416 0l24 0"/><path d="M464 0l36 0"/><path d="M524 0l28 0"/><path d="M576 0l22 0"/><path d="M622 1l30 0" transform="rotate(-4 637 1)"/><path d="M680 -2l20 0" transform="rotate(11 690 -2)"/><path d="M730 3l26 0" transform="rotate(-8 743 3)"/><path d="M790 0l18 0" transform="rotate(15 799 0)"/></g>
-<g transform="translate(0,102)"><path d="M22 2l20 0" transform="rotate(-12 32 2)"/><path d="M70 -1l32 0" transform="rotate(7 86 -1)"/><path d="M130 0l24 0" transform="rotate(-3 142 0)"/><path d="M186 0l38 0"/><path d="M248 0l22 0"/><path d="M296 0l44 0"/><path d="M364 0l26 0"/><path d="M414 0l32 0"/><path d="M470 0l24 0"/><path d="M520 0l40 0"/><path d="M584 0l20 0"/><path d="M630 2l28 0" transform="rotate(6 644 2)"/><path d="M684 -2l24 0" transform="rotate(-10 696 -2)"/><path d="M738 1l30 0" transform="rotate(4 753 1)"/><path d="M796 -3l16 0" transform="rotate(-16 804 -3)"/></g>
+<g transform="translate(0,102)" stroke-width="2.6"><path d="M22 2l20 0" transform="rotate(-12 32 2)"/><path d="M70 -1l32 0" transform="rotate(7 86 -1)"/><path d="M130 0l24 0" transform="rotate(-3 142 0)"/><path d="M186 0l38 0"/><path d="M248 0l22 0"/><path d="M296 0l44 0"/><path d="M364 0l26 0"/><path d="M414 0l32 0"/><path d="M470 0l24 0"/><path d="M520 0l40 0"/><path d="M584 0l20 0"/><path d="M630 2l28 0" transform="rotate(6 644 2)"/><path d="M684 -2l24 0" transform="rotate(-10 696 -2)"/><path d="M738 1l30 0" transform="rotate(4 753 1)"/><path d="M796 -3l16 0" transform="rotate(-16 804 -3)"/></g>
 <g transform="translate(0,152)"><path d="M34 -2l24 0" transform="rotate(13 46 -2)"/><path d="M86 1l18 0" transform="rotate(-6 95 1)"/><path d="M132 0l36 0" transform="rotate(2 150 0)"/><path d="M192 0l28 0"/><path d="M246 0l38 0"/><path d="M310 0l22 0"/><path d="M356 0l30 0"/><path d="M412 0l42 0"/><path d="M478 0l24 0"/><path d="M528 0l32 0"/><path d="M586 0l26 0"/><path d="M638 -1l22 0" transform="rotate(-7 649 -1)"/><path d="M688 2l32 0" transform="rotate(9 704 2)"/><path d="M744 0l20 0" transform="rotate(-13 754 0)"/><path d="M792 2l24 0" transform="rotate(5 804 2)"/></g>
 <g transform="translate(0,202)"><path d="M26 1l30 0" transform="rotate(-9 41 1)"/><path d="M84 -2l22 0" transform="rotate(12 95 -2)"/><path d="M134 2l26 0" transform="rotate(-5 147 2)"/><path d="M188 0l34 0"/><path d="M244 0l26 0"/><path d="M298 0l36 0"/><path d="M360 0l28 0"/><path d="M414 0l24 0"/><path d="M466 0l38 0"/><path d="M528 0l22 0"/><path d="M578 0l30 0"/><path d="M634 1l26 0" transform="rotate(8 647 1)"/><path d="M686 -1l20 0" transform="rotate(-11 696 -1)"/><path d="M736 2l28 0" transform="rotate(6 750 2)"/><path d="M790 -2l22 0" transform="rotate(-14 801 -2)"/></g>
 <g transform="translate(0,252)"><path d="M32 -1l20 0" transform="rotate(10 42 -1)"/><path d="M78 2l28 0" transform="rotate(-8 92 2)"/><path d="M130 -2l22 0" transform="rotate(4 141 -2)"/><path d="M184 0l30 0" transform="rotate(-2 199 0)"/><path d="M240 0l40 0"/><path d="M304 0l24 0"/><path d="M354 0l34 0"/><path d="M412 0l26 0"/><path d="M464 0l30 0"/><path d="M520 0l36 0"/><path d="M580 0l24 0"/><path d="M628 2l30 0" transform="rotate(-6 643 2)"/><path d="M684 -2l24 0" transform="rotate(9 696 -2)"/><path d="M740 1l20 0" transform="rotate(-12 750 1)"/><path d="M788 0l26 0" transform="rotate(7 801 0)"/></g>

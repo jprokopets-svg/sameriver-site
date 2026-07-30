@@ -620,6 +620,48 @@ def build_site_notes():
     print(f"  {out_path}")
 
 
+def build_art():
+    """Build the /art/ page with inline SVGs."""
+    art_dir = SITE / "art"
+    svg_files = ["wake.svg", "same-river.svg", "reliability-as-object.svg"]
+    titles = ["Wake", "Same River", "Reliability Diagram as Object"]
+    years = ["2026", "2026", "2026"]
+
+    sections = []
+    for i, svg_name in enumerate(svg_files):
+        svg_path = art_dir / svg_name
+        svg_content = ""
+        if svg_path.exists():
+            svg_content = svg_path.read_text(encoding="utf-8")
+            # Remove XML declaration for embedding
+            svg_content = re.sub(r'<\?xml[^>]*\?>', '', svg_content).strip()
+
+        sections.append(
+            f'<section class="art-piece">\n'
+            f'  <h2>{xml_escape(titles[i])}</h2>\n'
+            f'  <p class="art-year">{xml_escape(years[i])}</p>\n'
+            f'  <div class="art-svg">\n'
+            f'    {svg_content}\n'
+            f'  </div>\n'
+            f'  <p class="art-caption">—</p>\n'
+            f'</section>'
+        )
+
+    body = "\n".join(sections)
+
+    vars = {
+        "title": "Art",
+        "content": body,
+    }
+    tmpl = load_template("base.html")
+    html_out = tmpl.render(**vars)
+
+    out_path = SITE / "art" / "index.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html_out, encoding="utf-8")
+    print(f"  {out_path}")
+
+
 def build_changelog():
     """Build changelog page from CHANGELOG.md."""
     if not CHANGELOG.exists():
@@ -871,6 +913,7 @@ def main():
     build_rss(entries_by_section)
     build_changelog()
     build_site_notes()
+    build_art()
 
     # Copy CSS
     css_src = SITE / "style.css"
