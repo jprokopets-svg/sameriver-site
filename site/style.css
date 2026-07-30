@@ -296,6 +296,15 @@ main figcaption {
   margin-bottom: 0.75rem;
 }
 
+.home-section h3 a {
+  color: var(--fg-dim);
+  text-decoration: none;
+}
+
+.home-section h3 a:hover {
+  color: var(--fg-link-hover);
+}
+
 .home-section ul {
   list-style: none;
   padding: 0;
@@ -303,6 +312,69 @@ main figcaption {
 
 .home-section li {
   margin-bottom: 0.5rem;
+}
+
+/* ---- Homepage entry listing ---- */
+.home-entries li {
+  margin-bottom: 1.25rem;
+}
+
+.home-entries .entry-excerpt {
+  font-size: 0.9rem;
+  color: var(--fg-dim);
+  margin: 0.15rem 0 0.1rem;
+  line-height: 1.5;
+}
+
+.continue-link {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  text-decoration: none;
+}
+
+.continue-link:hover {
+  color: var(--fg-link-hover);
+}
+
+/* ---- Homepage status lines (Predictions, Reading) ---- */
+.home-status .status-line {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+}
+
+/* ---- Section index entries ---- */
+.entry-item {
+  margin-bottom: 1.5rem;
+}
+
+.entry-item .entry-excerpt {
+  font-size: 0.9rem;
+  color: var(--fg-dim);
+  margin: 0.2rem 0 0.1rem;
+  line-height: 1.5;
+}
+
+.entry-item .continue-link {
+  display: inline-block;
+  margin-top: 0.15rem;
+}
+
+/* ---- Archive year heading ---- */
+.archive-year {
+  list-style: none;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.archive-year h4 {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 400;
 }
 
 /* ---- Predictions ledger ---- */

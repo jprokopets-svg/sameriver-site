@@ -318,33 +318,21 @@ def build_section_pages(section: str):
     }
     # Manually build the entry list HTML since our template engine is minimal
     entry_items = []
-    for e in entries:
-        excerpt = ""
-        if e["file"]:
-            _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
-            # Strip DRAFT marker
-            body = re.sub(r'\*\*DRAFT.*?\*\*\s*', '', body, count=1).strip()
-            excerpt = body[:150].replace("\n", " ").strip()
-            if len(body) > 150:
-                excerpt += "…"
-        entry_html = f'<li><a href="{xml_escape(e["url"])}">{xml_escape(e["title"])}</a>'
-        if section == "reading":
-            # Show status + position instead of date
-            meta_status = e["meta"].get("status", "")
-            position = e["meta"].get("position", "")
-            meta_labels = []
-            if meta_status:
-                meta_labels.append(meta_status)
-            if position:
-                meta_labels.append(position)
-            if meta_labels:
-                entry_html += f' <span class="entry-date">{" · ".join(xml_escape(l) for l in meta_labels)}</span>'
-        elif e["date"]:
-            entry_html += f' <span class="entry-date">{xml_escape(e["date"])}</span>'
-        if excerpt:
-            entry_html += f'<p class="entry-excerpt">{xml_escape(excerpt)}</p>'
-        entry_html += "</li>"
-        entry_items.append(entry_html)
+    # Year-grouped archive when > 30 entries
+    if len(entries) > 30:
+        # Group by year
+        year_groups = {}
+        for e in entries:
+            year = e["date_iso"][:4] if e["date_iso"] else "Unknown"
+            year_groups.setdefault(year, []).append(e)
+        for year in sorted(year_groups.keys(), reverse=True):
+            grp = year_groups[year]
+            entry_items.append(f'<li class="archive-year"><h4>{year}</h4></li>')
+            for e in grp:
+                entry_items.append(build_entry_html(e, section))
+    else:
+        for e in entries:
+            entry_items.append(build_entry_html(e, section))
 
     # For single-page sections (about, influences, contact), render the
     # entry markdown body as the page content, not a section listing.
@@ -428,7 +416,7 @@ def build_section_pages(section: str):
 
 
 def build_index(entries_by_section: dict[str, list[dict]]):
-    """Build the home page."""
+    """Build the home page — summary view."""
     tmpl = load_template("base.html")
     sections_html = []
 
@@ -437,21 +425,85 @@ def build_index(entries_by_section: dict[str, list[dict]]):
         if not entries:
             continue
         title = SECTION_TITLES.get(section, section.title())
-        section_url = f"/{section}/" if section != "about" else "/about/"
+        section_url = f"/{section}/"
 
-        entry_list = ""
-        for e in entries[:5]:  # Show latest 5
-            entry_list += f'<li><a href="{xml_escape(e["url"])}">{xml_escape(e["title"])}</a>'
-            if e["date"]:
-                entry_list += f' <span class="entry-date">{xml_escape(e["date"])}</span>'
-            entry_list += "</li>\n"
-
-        sections_html.append(
-            f'<section class="home-section">\n'
-            f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
-            f'  <ul>\n{entry_list}  </ul>\n'
-            f'</section>'
-        )
+        if section in ("work", "notes", "log"):
+            # Title + first paragraph + continue link, 3 most recent
+            main_list = ""
+            for e in entries[:3]:
+                para = ""
+                if e["file"]:
+                    text = e["file"].read_text(encoding="utf-8")
+                    para = html.escape(first_paragraph(text))
+                date_str = xml_escape(e["date"]) if e["date"] else ""
+                main_list += (
+                    f'<li>'
+                    f'<a href="{xml_escape(e["url"])}">{xml_escape(e["title"])}</a>'
+                    f'{" <span class=\"entry-date\">" + date_str + "</span>" if date_str else ""}'
+                    f'{"<p class=\"entry-excerpt\">" + para + "</p>" if para else ""}'
+                    f'<a class="continue-link" href="{xml_escape(e["url"])}">continue →</a>'
+                    f'</li>'
+                )
+            sections_html.append(
+                f'<section class="home-section home-entries">\n'
+                f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
+                f'  <ul>\n{main_list}  </ul>\n'
+                f'</section>'
+            )
+        elif section == "predictions":
+            # Status line: Brier + open count
+            pred_file = CONTENT / "predictions" / "predictions.json"
+            brier_str = "—"
+            open_count = 0
+            if pred_file.exists():
+                with open(pred_file) as f:
+                    preds = json.load(f)
+                resolved = [p for p in preds if p.get("status") == "resolved"]
+                open_preds = [p for p in preds if p.get("status") == "open"]
+                open_count = len(open_preds)
+                if resolved:
+                    brier = 0.0
+                    for p in resolved:
+                        conf = p.get("confidence", 50) / 100.0
+                        outcome = 1.0 if p.get("outcome") is True else 0.0
+                        brier += (conf - outcome) ** 2
+                    brier /= len(resolved)
+                    brier_str = f"{brier:.3f}"
+            sections_html.append(
+                f'<section class="home-section home-status">\n'
+                f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
+                f'  <p class="status-line">Brier {brier_str} · {open_count} open</p>\n'
+                f'</section>'
+            )
+        elif section == "reading":
+            # Current book + position
+            current_book = None
+            current_pos = ""
+            for e in entries:
+                status = e["meta"].get("status", "")
+                if status and status.lower() == "reading":
+                    current_book = e["title"]
+                    current_pos = e["meta"].get("position", "")
+                    break
+            status_parts = []
+            if current_book:
+                status_parts.append(f'<a href="{xml_escape(entries[0]["url"])}">{xml_escape(current_book)}</a>')
+            if current_pos:
+                status_parts.append(current_pos)
+            status_line = " · ".join(status_parts) if status_parts else ""
+            sections_html.append(
+                f'<section class="home-section home-status">\n'
+                f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
+                f'  <p class="status-line">{"Currently reading: " + status_line if status_line else ""}</p>\n'
+                f'</section>'
+            )
+        else:
+            # About, Influences, Contact: just a link
+            sections_html.append(
+                f'<section class="home-section home-minimal">\n'
+                f'  <h3><a href="{section_url}">{xml_escape(title)}</a></h3>\n'
+                f'</section>'
+            )
 
     body = "\n".join(sections_html)
     vars = {
@@ -574,6 +626,77 @@ def build_changelog():
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html_out, encoding="utf-8")
     print(f"  {out_path}")
+
+
+def first_paragraph(text: str) -> str:
+    """Extract the first real paragraph from markdown text.
+
+    Skips: DRAFT markers, horizontal rules, images, blockquotes, headings,
+    code fences, and empty lines. Returns the first non-empty paragraph
+    with inline formatting preserved as plain text.
+    """
+    # Remove frontmatter
+    text = re.sub(r'^---.*?\n---\n', '', text, flags=re.DOTALL).strip()
+    # Strip DRAFT marker
+    text = re.sub(r'\*\*DRAFT.*?\*\*\s*', '', text, count=1).strip()
+
+    for line in text.split('\n'):
+        line = line.strip()
+        # Skip empty lines, headings, HRs, images, blockquotes, code fences, lists
+        if not line:
+            continue
+        if line.startswith('#'):
+            continue
+        if line.startswith('---') or line.startswith('***') or line.startswith('___'):
+            continue
+        if line.startswith('!'):
+            continue
+        if line.startswith('>'):
+            continue
+        if line.startswith('```') or line.startswith('~~~'):
+            continue
+        if line.startswith('- ') or line.startswith('* ') or line.startswith('1.'):
+            continue
+        # Got a real paragraph
+        # Truncate cleanly at sentence boundary
+        if len(line) > 300:
+            # Find last sentence end before 300
+            cut = line[:300].rfind('. ')
+            if cut > 150:
+                line = line[:cut + 1]
+                return line
+        return line
+    return ""
+
+
+def build_entry_html(e: dict, section: str) -> str:
+    """Build an <li> entry for section index listings."""
+    para = ""
+    if e["file"]:
+        text = e["file"].read_text(encoding="utf-8")
+        para = html.escape(first_paragraph(text))
+
+    entry_html = f'<li class="entry-item">'
+    entry_html += f'<a href="{xml_escape(e["url"])}">{xml_escape(e["title"])}</a>'
+
+    if section == "reading":
+        meta_status = e["meta"].get("status", "")
+        position = e["meta"].get("position", "")
+        meta_labels = []
+        if meta_status:
+            meta_labels.append(meta_status)
+        if position:
+            meta_labels.append(position)
+        if meta_labels:
+            entry_html += f' <span class="entry-date">{" · ".join(xml_escape(l) for l in meta_labels)}</span>'
+    elif e["date"]:
+        entry_html += f' <span class="entry-date">{xml_escape(e["date"])}</span>'
+
+    if para:
+        entry_html += f'<p class="entry-excerpt">{para}</p>'
+    entry_html += f'<a class="continue-link" href="{xml_escape(e["url"])}">continue →</a>'
+    entry_html += "</li>"
+    return entry_html
 
 
 def copy_static():
