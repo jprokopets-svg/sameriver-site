@@ -1,1 +1,69 @@
-[]
+[
+  {
+    "id": "pred-1",
+    "statement": "A publicly available model will score ≥90% on Terminal-Bench 2.1.",
+    "resolution_criterion": "Any public leaderboard or vendor-published, independently reproducible result at or above 90% on Terminal-Bench 2.1.",
+    "deadline": "2026-12-31",
+    "confidence": 70,
+    "date_made": "2026-07-29",
+    "status": "open",
+    "outcome": null,
+    "score": null
+  },
+  {
+    "id": "pred-2",
+    "statement": "A major lab (OpenAI, Anthropic, or Google DeepMind) will publish research specifically on calibration or self-assessed confidence for agentic tasks.",
+    "resolution_criterion": "An official paper or research blog post from one of the three named labs whose primary subject is confidence/calibration in agentic (multi-step, tool-using) settings.",
+    "deadline": "2027-07-29",
+    "confidence": 60,
+    "date_made": "2026-07-29",
+    "status": "open",
+    "outcome": null,
+    "score": null
+  },
+  {
+    "id": "pred-3",
+    "statement": "An open-weights model will hold a top-3 position on the LMArena overall text leaderboard.",
+    "resolution_criterion": "Screenshot-able top-3 placement on the main text leaderboard at any point before the deadline.",
+    "deadline": "2027-03-31",
+    "confidence": 40,
+    "date_made": "2026-07-29",
+    "status": "open",
+    "outcome": null,
+    "score": null
+  },
+  {
+    "id": "pred-4",
+    "statement": "US year-over-year CPI inflation will print below 3.0% in the BLS release covering November 2026.",
+    "resolution_criterion": "Headline CPI-U YoY figure in the official BLS release.",
+    "deadline": "2026-12-31",
+    "confidence": 55,
+    "date_made": "2026-07-29",
+    "status": "open",
+    "outcome": null,
+    "score": null,
+    "note": "Made with acknowledged uncertainty about the current print — that's part of the exercise."
+  },
+  {
+    "id": "pred-5",
+    "statement": "Study 2 (introspective accuracy: do a model's claims about its own behavior predict that model's measured behavior better than they predict other models'?) will be published on this site.",
+    "resolution_criterion": "A completed writeup in Work with frozen data.",
+    "deadline": "2026-10-31",
+    "confidence": 80,
+    "date_made": "2026-07-29",
+    "status": "open",
+    "outcome": null,
+    "score": null
+  },
+  {
+    "id": "pred-6",
+    "statement": "At least one researcher I cold-email will send a substantive reply (engaging with the work's content, not a pleasantry).",
+    "resolution_criterion": "Judged by me in public, with the reasoning posted, quoting no private text without permission.",
+    "deadline": "2026-12-31",
+    "confidence": 65,
+    "date_made": "2026-07-29",
+    "status": "open",
+    "outcome": null,
+    "score": null
+  }
+]

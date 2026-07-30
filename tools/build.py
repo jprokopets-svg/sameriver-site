@@ -853,12 +853,14 @@ def build_predictions():
         date_made = xml_escape(p.get("date_made", ""))
         statement = xml_escape(p.get("statement", ""))
         criterion = xml_escape(p.get("resolution_criterion", ""))
+        note = xml_escape(p.get("note", ""))
         score = p.get("score")
         score_cell = f'{score:.3f}' if score is not None else ''
         outcome_cell = '✓' if p.get("outcome") is True else ('✗' if p.get("outcome") is False else '')
+        note_html = f'<p class="pred-note">{note}</p>' if note else ''
         return (
             f'<tr>'
-            f'<td class="pred-statement">{statement}</td>'
+            f'<td class="pred-statement">{statement}{note_html}</td>'
             f'<td class="pred-criterion">{criterion}</td>'
             f'<td class="pred-deadline">{deadline}</td>'
             f'<td class="pred-conf">{conf}</td>'

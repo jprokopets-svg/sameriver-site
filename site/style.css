@@ -473,6 +473,13 @@ main figcaption {
   text-align: center;
 }
 
+.pred-note {
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
 .empty-state {
   color: var(--fg-dim);
   font-style: italic;
