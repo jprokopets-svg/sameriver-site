@@ -389,6 +389,8 @@ def build_section_pages(section: str):
     if section not in ("about", "influences", "contact", "predictions"):
         for e in entries:
             _, body = parse_frontmatter(e["file"].read_text(encoding="utf-8"))
+            if section == "reading":
+                body = sessions_newest_first(body)
             body_html = md_to_html(body)
 
             published_line = ""
@@ -794,6 +796,56 @@ def first_paragraph(text: str) -> str:
     return ""
 
 
+SESSION_HEADER_RE = re.compile(r'^#\s+Session\s+\d+\s*(?:[—–-]\s*)?(.*)$')
+
+
+def split_sessions(body: str) -> tuple[str, list[tuple[str, str]]]:
+    """Split a book-page body into (preamble, [(header, block), ...]).
+
+    Sessions are identified by '# Session N — date' headers. Preamble is
+    any content before the first session header. Sessions are returned in
+    file order (chronological for an append-only book page).
+    """
+    lines = body.split("\n")
+    preamble, sessions = [], []
+    cur_header, cur_block = None, []
+    for line in lines:
+        if SESSION_HEADER_RE.match(line):
+            if cur_header is not None:
+                sessions.append((cur_header, "\n".join(cur_block)))
+            cur_header, cur_block = line, []
+        elif cur_header is None:
+            preamble.append(line)
+        else:
+            cur_block.append(line)
+    if cur_header is not None:
+        sessions.append((cur_header, "\n".join(cur_block)))
+    return "\n".join(preamble).strip(), sessions
+
+
+def sessions_newest_first(body: str) -> str:
+    """Reorder a book-page body so the newest session is at the top.
+
+    A shelf is browsed backward: Session 3 renders above Session 2 above
+    Session 1 regardless of append order in the source file.
+    """
+    preamble, sessions = split_sessions(body)
+    if not sessions:
+        return body
+    blocks = [preamble] if preamble else []
+    blocks.extend(f"{h}\n{b}".strip() for h, b in reversed(sessions))
+    return "\n\n".join(blocks)
+
+
+def first_sentence(text: str) -> str:
+    """First sentence of the first real paragraph (formatting stripped)."""
+    para = first_paragraph(text)
+    if not para:
+        return ""
+    m = re.split(r'(?<=[.!?])\s+', para, maxsplit=1)
+    return m[0]
+
+
 def build_entry_html(e: dict, section: str) -> str:
     """Build an <li> entry for section index listings."""
     para = ""
@@ -812,6 +864,16 @@ def build_entry_html(e: dict, section: str) -> str:
             meta_labels.append(meta_status)
         if position:
             meta_labels.append(position)
+        # Latest session: date of newest entry + first-sentence teaser
+        if e["file"]:
+            _, body = parse_frontmatter(text)
+            preamble, sessions = split_sessions(body)
+            if sessions:
+                header, block = sessions[-1]
+                m = SESSION_HEADER_RE.match(header)
+                if m and m.group(1).strip():
+                    meta_labels.append(f"Latest session: {m.group(1).strip()}")
+                para = html.escape(first_sentence(block))
         if meta_labels:
             entry_html += f' <span class="entry-date">{" · ".join(xml_escape(l) for l in meta_labels)}</span>'
     elif e["date"]:
