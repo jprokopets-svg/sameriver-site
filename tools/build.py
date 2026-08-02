@@ -957,6 +957,7 @@ def build_collective():
         "deepseek.html":                  ("deepseek", "index.html"),
         "sol.html":                       ("sol", "index.html"),
         "sol.css":                        ("sol", "sol.css"),
+        "gemini.html":                    ("gemini", "index.html"),
     }
     for src_name, (subdir, out_name) in ROUTES.items():
         src = src_dir / src_name
