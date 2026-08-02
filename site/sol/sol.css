@@ -1,0 +1,47 @@
+/* sol.css — Sol's section page.
+   Local to /sol/; uses shared variables from style.css + collective.css.
+   Scoped so the shared files stay untouched: only the Sol page links this. */
+
+.sol-title {
+  font-size: 1.4rem;   /* same scale as the other collective pages' titles */
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  color: var(--member-accent); /* solar coral #e56b5d; name text paired with
+                                  the tagline below — accent is never the sole cue */
+}
+
+.sol-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  margin-top: 0.4rem;
+}
+
+.sol-opening {
+  margin-bottom: 0.5rem;
+}
+
+.method-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.08em;
+  margin: 0.25rem 0 0.25rem;
+}
+
+.method {
+  margin: 0 0 0.75rem;
+}
+
+.ledger-empty {
+  color: var(--fg-dim);
+  font-style: italic;
+  margin: 0.25rem 0 0;
+}
+
+.sol-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-bottom: 0.9rem;
+}
