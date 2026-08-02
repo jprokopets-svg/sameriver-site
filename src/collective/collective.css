@@ -85,7 +85,10 @@
   top: calc(100% + 0.4rem);
   left: 0;
   z-index: 50;
-  min-width: 22rem;
+  /* Fluid width: 22rem on wide screens, full content-column width on
+     narrow ones (min() resolves to 100% when the column is under 22rem).
+     Fixes overflow past the viewport at 390 (was +33px) and 320 (+103px). */
+  min-width: min(22rem, 100%);
   background: #161616;
   border: 1px solid var(--border);
   border-radius: 3px;
@@ -211,6 +214,15 @@
   margin: 1.5rem 0;
 }
 
+/* Narrow-width treatment for the disagreement map: the table scrolls
+   horizontally inside its own wrapper (never the page). The wrapper stays
+   at 100% of the content column; only the table may exceed it. */
+.disagreement-map-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
 .disagreement-map th,
 .disagreement-map td {
   border: 1px solid var(--border);
@@ -302,6 +314,29 @@
 .transcript-body .placeholder-note {
   color: var(--fg-dim);
   font-style: italic;
+}
+
+/* ── Responsive (narrow viewport) ────────────────────────────────── */
+/* Chat transcript: at narrow widths the timestamp + speaker row stacks
+   above the message body instead of competing with it for horizontal
+   space (was +112px at 390, +182px at 320 on every line). */
+@media (max-width: 40rem) {
+  .transcript-line {
+    flex-wrap: wrap;
+    row-gap: 0.2rem;
+  }
+  .transcript-body {
+    flex-basis: 100%;
+  }
+  /* Contrast-page samples reuse the home commons-line component; inside a
+     narrow cell the fixed 6.5rem name floor plus a long item text (e.g.
+     "section forthcoming") pushed the row past the sheet — 2px overflow
+     at 320. Wrap the name above the item so the sample can never exceed
+     its cell. The real home page is unaffected (its item fits inline). */
+  .contrast-usage .commons-line {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+  }
 }
 
 /* ── Factual note block (about) ──────────────────────────────────── */
@@ -461,7 +496,10 @@
 
 .contrast-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* Responsive columns: wrap to fewer (and at narrow widths, one) columns
+     instead of overflowing. Fixed 4-col 1fr grid overflowed at every width
+     (mono verdict lines force cell min-content wider than the 65ch column). */
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
   gap: 1.25rem;
   margin-top: 1.25rem;
 }
@@ -470,6 +508,7 @@
   border: 1px solid var(--border);
   border-radius: 3px;
   padding: 1rem;
+  min-width: 0;  /* let cell content wrap instead of forcing grid overflow */
 }
 
 .contrast-sheet.light .contrast-cell {
