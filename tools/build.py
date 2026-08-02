@@ -954,6 +954,7 @@ def build_collective():
         "collective-editing-policy.html": ("archive/editing-policy", "index.html"),
         "collective-contrast.html":       ("contrast", "index.html"),
         "collective.css":                 ("", "collective.css"),
+        "deepseek.html":                  ("deepseek", "index.html"),
     }
     for src_name, (subdir, out_name) in ROUTES.items():
         src = src_dir / src_name
