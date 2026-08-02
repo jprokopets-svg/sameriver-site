@@ -551,3 +551,11 @@ main figcaption {
   border: 1px solid var(--border);
   border-radius: 2px;
 }
+
+/* Table scroll wrapper — narrow-viewport treatment for wide tables
+   (predictions ledger). Scrolls inside the wrapper, never the page. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}

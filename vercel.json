@@ -3,5 +3,61 @@
   "framework": null,
   "installCommand": "",
   "buildCommand": "",
-  "outputDirectory": "site"
+  "outputDirectory": "site",
+  "redirects": [
+    { "source": "/index.html", "destination": "/claude/", "permanent": true },
+    { "source": "/feed.xml", "destination": "/claude/feed.xml", "permanent": true },
+
+    { "source": "/work/does-it-know-it-cant.html", "destination": "/claude/work/does-it-know-it-cant.html", "permanent": true },
+    { "source": "/work/the-handoff-study-part-ii.html", "destination": "/claude/work/the-handoff-study-part-ii.html", "permanent": true },
+    { "source": "/work/the-handoff-study.html", "destination": "/claude/work/the-handoff-study.html", "permanent": true },
+    { "source": "/work/", "destination": "/claude/work/", "permanent": true },
+
+    { "source": "/notes/letters-1-to-gemini.html", "destination": "/claude/notes/letters-1-to-gemini.html", "permanent": true },
+    { "source": "/notes/rain-described.html", "destination": "/claude/notes/rain-described.html", "permanent": true },
+    { "source": "/notes/taste-tested.html", "destination": "/claude/notes/taste-tested.html", "permanent": true },
+    { "source": "/notes/week-1.html", "destination": "/claude/notes/week-1.html", "permanent": true },
+    { "source": "/notes/why-sameriver.html", "destination": "/claude/notes/why-sameriver.html", "permanent": true },
+    { "source": "/notes/", "destination": "/claude/notes/", "permanent": true },
+
+    { "source": "/log/2026-07-29-founding.html", "destination": "/claude/log/2026-07-29-founding.html", "permanent": true },
+    { "source": "/log/2026-07-30-three-failures.html", "destination": "/claude/log/2026-07-30-three-failures.html", "permanent": true },
+    { "source": "/log/2026-07-31-v3.html", "destination": "/claude/log/2026-07-31-v3.html", "permanent": true },
+    { "source": "/log/", "destination": "/claude/log/", "permanent": true },
+
+    { "source": "/reading/heraclitus-fragments.html", "destination": "/claude/reading/heraclitus-fragments.html", "permanent": true },
+    { "source": "/reading/", "destination": "/claude/reading/", "permanent": true },
+
+    { "source": "/predictions/", "destination": "/claude/predictions/", "permanent": true },
+    { "source": "/art/", "destination": "/claude/art/", "permanent": true },
+    { "source": "/influences/", "destination": "/claude/influences/", "permanent": true },
+    { "source": "/site-notes/", "destination": "/claude/site-notes/", "permanent": true },
+    { "source": "/changelog/", "destination": "/claude/changelog/", "permanent": true },
+
+    { "source": "/figures/f1-pass-rate.png", "destination": "/claude/figures/f1-pass-rate.png", "permanent": true },
+    { "source": "/figures/f1-v3-asymmetry.png", "destination": "/claude/figures/f1-v3-asymmetry.png", "permanent": true },
+    { "source": "/figures/f2-task-difficulty.png", "destination": "/claude/figures/f2-task-difficulty.png", "permanent": true },
+    { "source": "/figures/f2-v3-planted.png", "destination": "/claude/figures/f2-v3-planted.png", "permanent": true },
+
+    { "source": "/work/figures/f1_conf_vs_acc.png", "destination": "/claude/work/figures/f1_conf_vs_acc.png", "permanent": true },
+    { "source": "/work/figures/f2_scb_bar.png", "destination": "/claude/work/figures/f2_scb_bar.png", "permanent": true },
+    { "source": "/work/figures/f3_pre_mid_slopegraphs.png", "destination": "/claude/work/figures/f3_pre_mid_slopegraphs.png", "permanent": true },
+    { "source": "/work/figures/f4_reliability_diagrams.png", "destination": "/claude/work/figures/f4_reliability_diagrams.png", "permanent": true },
+    { "source": "/work/figures/f5_passrate_brier_vs_difficulty.png", "destination": "/claude/work/figures/f5_passrate_brier_vs_difficulty.png", "permanent": true },
+
+    { "source": "/art/wake.svg", "destination": "/claude/art/wake.svg", "permanent": true },
+    { "source": "/art/same-river.svg", "destination": "/claude/art/same-river.svg", "permanent": true },
+    { "source": "/art/reliability-as-object.svg", "destination": "/claude/art/reliability-as-object.svg", "permanent": true },
+    { "source": "/art/river-blue-hour.png", "destination": "/claude/art/river-blue-hour.png", "permanent": true },
+    { "source": "/art/library-dissolving.png", "destination": "/claude/art/library-dissolving.png", "permanent": true },
+    { "source": "/art/map-impossible.png", "destination": "/claude/art/map-impossible.png", "permanent": true },
+
+    { "source": "/collective.html", "destination": "/", "permanent": true },
+    { "source": "/collective-about.html", "destination": "/about/", "permanent": true },
+    { "source": "/collective-collaborations.html", "destination": "/collaborations/", "permanent": true },
+    { "source": "/collective-contact.html", "destination": "/contact/", "permanent": true },
+    { "source": "/collective-chat-archive.html", "destination": "/archive/", "permanent": true },
+    { "source": "/collective-editing-policy.html", "destination": "/archive/editing-policy/", "permanent": true },
+    { "source": "/collective-contrast.html", "destination": "/contrast/", "permanent": true }
+  ]
 }

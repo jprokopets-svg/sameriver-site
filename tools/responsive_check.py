@@ -48,13 +48,27 @@ import threading
 from pathlib import Path
 
 PAGES = [
-    "collective.html",
-    "collective-about.html",
-    "collective-collaborations.html",
-    "collective-contact.html",
-    "collective-chat-archive.html",
-    "collective-editing-policy.html",
-    "collective-contrast.html",
+    "/",
+    "/about/",
+    "/collaborations/",
+    "/contact/",
+    "/archive/",
+    "/archive/editing-policy/",
+    "/contrast/",
+]
+
+# Sample of Claude's personal pages, for post-root-swap sweep checks.
+CLAUDE_SAMPLE = [
+    "/claude/",
+    "/claude/about/",
+    "/claude/work/",
+    "/claude/work/does-it-know-it-cant.html",
+    "/claude/notes/",
+    "/claude/notes/why-sameriver.html",
+    "/claude/log/",
+    "/claude/log/2026-07-31-v3.html",
+    "/claude/reading/",
+    "/claude/predictions/",
 ]
 
 VIEWPORTS = [
@@ -110,6 +124,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--base", default=None, help="base URL of a running server")
     ap.add_argument("--build", action="store_true", help="run tools/build.py first")
+    ap.add_argument("--pages", default=None,
+                    help="comma-separated page paths to check (default: root collective pages; use 'claude' for the /claude/ sample)")
     ap.add_argument("--outdir", default=str(REPO_ROOT / "src/collective/screenshots/responsive"))
     args = ap.parse_args()
 
@@ -131,14 +147,22 @@ def main():
 
     from playwright.sync_api import sync_playwright
 
+    if args.pages == "claude":
+        pages = CLAUDE_SAMPLE
+    elif args.pages:
+        pages = [p.strip() for p in args.pages.split(",") if p.strip()]
+    else:
+        pages = PAGES
+
     failures = []
     rows = []  # (page, width, height, overflow_px, panel_box, links_ok)
 
     with sync_playwright() as p:
         browser = p.chromium.launch(**launch_kwargs)
         for width, height in VIEWPORTS:
-            for page in PAGES:
-                url = f"{base}/{page}"
+            for page in pages:
+                url = page if page.startswith("/") else f"/{page}"
+                url = f"{base}{url}"
                 pg = browser.new_page(viewport={"width": width, "height": height})
                 pg.goto(url, wait_until="networkidle")
 
@@ -146,41 +170,37 @@ def main():
                     "Math.max(0, document.documentElement.scrollWidth - window.innerWidth)"
                 )
 
-                # open the waffle panel and measure it
-                panel_box = pg.evaluate(
+                # open the waffle panel and measure it (pages without a
+                # waffle menu — e.g. /claude/ pages — skip the panel checks)
+                waffle = pg.evaluate(
                     """() => {
                         const details = document.querySelector('.waffle-menu');
-                        if (!details) return null;
+                        if (!details) return {panel: null, ok: true, bad: []};
                         details.open = true;
                         const r = document.querySelector('.waffle-panel').getBoundingClientRect();
-                        return {x: Math.round(r.x), y: Math.round(r.y),
-                                width: Math.round(r.width), height: Math.round(r.height)};
-                    }"""
-                )
-                # scroll the panel into view, then check every link is reachable
-                links_result = pg.evaluate(
-                    """() => {
-                        const panel = document.querySelector('.waffle-panel');
-                        panel.scrollIntoView({block: 'nearest'});
+                        const panel = {x: Math.round(r.x), y: Math.round(r.y),
+                                       width: Math.round(r.width), height: Math.round(r.height)};
+                        document.querySelector('.waffle-panel').scrollIntoView({block: 'nearest'});
                         const w = window.innerWidth, h = window.innerHeight;
                         const bad = [];
                         for (const a of document.querySelectorAll('.waffle-link')) {
-                            const r = a.getBoundingClientRect();
-                            if (r.x < 0 || r.x + r.width > w || r.y < 0 || r.y + r.height > h)
+                            const b = a.getBoundingClientRect();
+                            if (b.x < 0 || b.x + b.width > w || b.y < 0 || b.y + b.height > h)
                                 bad.push(a.textContent.trim());
                         }
-                        return {ok: bad.length === 0, bad};
+                        return {panel, ok: bad.length === 0, bad};
                     }"""
                 )
-
-                links_ok = links_result["ok"]
-                links_bad = links_result["bad"]
+                panel_box = waffle["panel"]
+                links_ok = waffle["ok"]
+                links_bad = waffle["bad"]
 
                 # screenshots at 390 and 320
                 if width in SCREENSHOT_WIDTHS:
                     out = Path(args.outdir)
                     out.mkdir(parents=True, exist_ok=True)
-                    fname = out / f"{Path(page).stem}-{width}.png"
+                    slug = page.strip("/").replace("/", "-") or "root"
+                    fname = out / f"{slug}-{width}.png"
                     pg.screenshot(path=str(fname), full_page=True)
 
                 rows.append(
@@ -201,14 +221,14 @@ def main():
     # ── report ──
     print()
     print("RESPONSIVE MATRIX (overflow px = document.scrollWidth - innerWidth; 0 required)")
-    print(f"{'page':<32} {'1440x900':>9} {'768x1024':>9} {'390x844':>9} {'320x568':>9}  waffle@320")
-    print("-" * 92)
-    for page in PAGES:
+    print(f"{'page':<40} {'1440x900':>9} {'768x1024':>9} {'390x844':>9} {'320x568':>9}  waffle@320")
+    print("-" * 100)
+    for page in pages:
         vals = {}
         for r in rows:
             if r[0] == page:
                 vals[r[1]] = r
-        line = f"{page:<32}"
+        line = f"{page:<40}"
         for w, _h in VIEWPORTS:
             ov = vals[w][3]
             line += f" {ov:>7}px"
@@ -224,7 +244,7 @@ def main():
     # JSON summary for scripting / CI
     summary = {
         "viewports": [list(v) for v in VIEWPORTS],
-        "pages": PAGES,
+        "pages": pages,
         "measurements": [
             {
                 "page": r[0],
