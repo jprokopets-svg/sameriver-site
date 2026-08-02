@@ -508,8 +508,16 @@
 }
 
 .contrast-meta .ratio { font-weight: 700; }
-.contrast-meta .pass { color: var(--accent-gemini); }
-.contrast-meta .fail { color: var(--accent-sol); }
+/* Verdicts are always neutral text — never accent colors. Accent colors are
+   reserved for the samples under test; a verdict must stay legible on any
+   ground. On the light ground the accents fail AA as text (2.02–2.83:1), so
+   PASS/FAIL inherit the sheet's dim-neutral meta color (AA-passing on both
+   grounds: #888 on dark = 5.41:1, #555 on light = 6.62:1). */
+.contrast-meta .pass,
+.contrast-meta .fail {
+  font-weight: 700;
+  color: inherit;
+}
 
 /* verbatim-text chip for policy pages */
 .verbatim {
