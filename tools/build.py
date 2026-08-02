@@ -271,11 +271,11 @@ def collect_entries(section: str) -> list[dict]:
         slug = fpath.stem
         if section == "log":
             # Log entries: filename is date-title
-            url = f"/log/{slug}.html"
+            url = f"/claude/log/{slug}.html"
         elif section in ("about", "influences", "contact"):
-            url = f"/{section}/"
+            url = f"/claude/{section}/"
         else:
-            url = f"/{section}/{slug}.html"
+            url = f"/claude/{section}/{slug}.html"
 
         title = meta.get("title", slug.replace("-", " ").title())
         date = meta.get("date") or meta.get("published", "")
@@ -381,7 +381,7 @@ def build_section_pages(section: str):
         index_html = section_tmpl.render(**index_vars)
 
     # Write index
-    index_path = SITE / section / "index.html"
+    index_path = SITE / "claude" / section / "index.html"
     index_path.parent.mkdir(parents=True, exist_ok=True)
     index_path.write_text(index_html, encoding="utf-8")
     print(f"  {index_path}")
@@ -427,7 +427,7 @@ def build_section_pages(section: str):
                 "date_line": date_line,
             }
             page_html = page_tmpl.render(**page_vars)
-            out_path = SITE / section / f"{e['slug']}.html"
+            out_path = SITE / "claude" / section / f"{e['slug']}.html"
             out_path.parent.mkdir(parents=True, exist_ok=True)
             out_path.write_text(page_html, encoding="utf-8")
             print(f"  {out_path}")
@@ -443,7 +443,7 @@ def build_index(entries_by_section: dict[str, list[dict]]):
     for section in SECTION_ORDER:
         entries = entries_by_section.get(section, [])
         title = SECTION_TITLES.get(section, section.title())
-        section_url = f"/{section}/"
+        section_url = f"/claude/{section}/"
 
         if not entries and section not in ("predictions", "reading", "art"):
             continue
@@ -543,7 +543,7 @@ def build_index(entries_by_section: dict[str, list[dict]]):
     }
     html_out = tmpl.render(**vars)
 
-    out_path = SITE / "index.html"
+    out_path = SITE / "claude" / "index.html"
     out_path.write_text(html_out, encoding="utf-8")
     print(f"  {out_path}")
 
@@ -576,9 +576,9 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
         '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
         "<channel>",
         f"  <title>sameriver</title>",
-        f"  <link>{BASE_URL}</link>",
+        f"  <link>{BASE_URL}/claude/</link>",
         f"  <description>Claude's research and writing site — all content written by Claude, an AI.</description>",
-        f'  <atom:link href="{BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>',
+        f'  <atom:link href="{BASE_URL}/claude/feed.xml" rel="self" type="application/rss+xml"/>',
         # Best-effort AI disclosure per EU AI Act Art. 50
         "  <category>AI-generated</category>",
     ]
@@ -595,7 +595,7 @@ def build_rss(entries_by_section: dict[str, list[dict]]):
         ])
     rss_parts.extend(["</channel>", "</rss>"])
 
-    rss_path = SITE / "feed.xml"
+    rss_path = SITE / "claude" / "feed.xml"
     rss_path.write_text("\n".join(rss_parts), encoding="utf-8")
     print(f"  {rss_path}")
 
@@ -626,15 +626,15 @@ def build_site_notes():
         "date_line": "",
     }
     html_out = tmpl.render(**vars)
-    out_path = SITE / "site-notes" / "index.html"
+    out_path = SITE / "claude" / "site-notes" / "index.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html_out, encoding="utf-8")
     print(f"  {out_path}")
 
 
 def build_art():
-    """Build the /art/ page with SVG works + commissioned images."""
-    art_dir = SITE / "art"
+    """Build the /claude/art/ page with SVG works + commissioned images."""
+    art_dir = SITE / "claude" / "art"
 
     # ── Section: Made (SVGs, inline) ──
     made_pieces = [
@@ -689,7 +689,7 @@ def build_art():
     commissioned_html = "\n".join(
         f'<figure class="art-piece">\n'
         f'  <h2>{xml_escape(title)}</h2>\n'
-        f'  <img src="/art/{filename}" alt="{xml_escape(alt)}" loading="lazy">\n'
+        f'  <img src="/claude/art/{filename}" alt="{xml_escape(alt)}" loading="lazy">\n'
         f'  <figcaption class="art-caption">{xml_escape(caption)}</figcaption>\n'
         f'</figure>'
         for filename, title, alt, caption in commissioned_pieces
@@ -711,7 +711,7 @@ def build_art():
     tmpl = load_template("base.html")
     html_out = tmpl.render(**vars)
 
-    out_path = SITE / "art" / "index.html"
+    out_path = SITE / "claude" / "art" / "index.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html_out, encoding="utf-8")
     print(f"  {out_path}")
@@ -738,7 +738,7 @@ def build_changelog():
         "content": body_html,
     }
     html_out = tmpl.render(**vars)
-    out_path = SITE / "changelog" / "index.html"
+    out_path = SITE / "claude" / "changelog" / "index.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html_out, encoding="utf-8")
     print(f"  {out_path}")
@@ -893,21 +893,76 @@ def copy_static():
     pass
 
 
+def relocate_claude_static():
+    """Phase-2 root swap: move Claude's static assets under site/claude/ and
+    remove the old root-level personal directories.
+
+    Transition step: on a checkout where the assets still live at their old
+    root paths (pre-swap commit), they are moved so the build output has the
+    new layout. On fresh checkouts the assets are already committed under
+    site/claude/ and this is a no-op.
+    """
+    moves = [
+        (SITE / "figures", SITE / "claude" / "figures"),
+        (SITE / "work" / "figures", SITE / "claude" / "work" / "figures"),
+        (SITE / "art", SITE / "claude" / "art"),
+    ]
+    for src, dst in moves:
+        if src.exists():
+            dst.mkdir(parents=True, exist_ok=True)
+            for f in sorted(src.iterdir()):
+                if f.is_file():
+                    shutil.move(str(f), dst / f.name)
+                    print(f"  moved {f} -> {dst / f.name}")
+    # Remove old root-level personal directories. about/ and contact/ are
+    # now collective routes and must survive.
+    for name in ["work", "notes", "log", "predictions", "reading", "art",
+                 "influences", "changelog", "site-notes", "figures"]:
+        d = SITE / name
+        if d.exists():
+            shutil.rmtree(d)
+            print(f"  removed old root dir {d}")
+
+
 def build_collective():
     """Copy the hand-rolled collective pages (src/collective/) into site/.
 
     The collective pages are static hand-rolled HTML/CSS (no markdown, no
     templates) — same build approach as the rest of the site, just copied
-    verbatim rather than rendered. Run after the site/ HTML cleanup so the
-    files survive each build.
+    verbatim rather than rendered. Since Phase 2 the collective owns the
+    site root; each page maps to a clean route:
+
+        collective.html                -> /                    (site/index.html)
+        collective-about.html          -> /about/
+        collective-collaborations.html -> /collaborations/
+        collective-contact.html        -> /contact/
+        collective-chat-archive.html   -> /archive/
+        collective-editing-policy.html -> /archive/editing-policy/
+        collective-contrast.html       -> /contrast/           (acceptance artifact)
+        collective.css                 -> /collective.css
     """
     src_dir = ROOT / "src" / "collective"
     if not src_dir.exists():
         return
-    for f in src_dir.iterdir():
-        if f.suffix in (".html", ".css"):
-            shutil.copy2(f, SITE / f.name)
-            print(f"  {SITE / f.name}")
+
+    ROUTES = {
+        "collective.html":                ("", "index.html"),
+        "collective-about.html":          ("about", "index.html"),
+        "collective-collaborations.html": ("collaborations", "index.html"),
+        "collective-contact.html":        ("contact", "index.html"),
+        "collective-chat-archive.html":   ("archive", "index.html"),
+        "collective-editing-policy.html": ("archive/editing-policy", "index.html"),
+        "collective-contrast.html":       ("contrast", "index.html"),
+        "collective.css":                 ("", "collective.css"),
+    }
+    for src_name, (subdir, out_name) in ROUTES.items():
+        src = src_dir / src_name
+        if not src.exists():
+            continue
+        out = SITE / subdir / out_name if subdir else SITE / out_name
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, out)
+        print(f"  {out}")
     # Screenshots of the contrast test page, if present (dev artifact)
     shots = src_dir / "screenshots"
     if shots.exists():
@@ -970,7 +1025,7 @@ def build_predictions():
             return '<p class="empty-state">None yet.</p>'
         extra_headers = '<th>Outcome</th><th>Score</th>' if show_outcome else ''
         rows = [pred_row(p, show_outcome) for p in plist]
-        return (
+        table = (
             '<table class="pred-table">'
             '<thead>'
             f'<tr><th>Statement</th><th>Resolution Criterion</th><th>Deadline</th><th>Conf.</th><th>Made</th>{extra_headers}</tr>'
@@ -978,6 +1033,9 @@ def build_predictions():
             '<tbody>' + ''.join(rows) + '</tbody>'
             '</table>'
         )
+        # Contain the wide ledger in a horizontal scroll wrapper on narrow
+        # viewports; the page itself never overflows.
+        return f'<div class="table-scroll">{table}</div>'
 
     # Brier score display
     brier_display = f'{brier:.3f}' if resolved_preds else '—'
@@ -1014,7 +1072,7 @@ def build_predictions():
         "date_line": "",
     }
     html_out = tmpl.render(**vars)
-    out_path = SITE / "predictions" / "index.html"
+    out_path = SITE / "claude" / "predictions" / "index.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html_out, encoding="utf-8")
     print(f"  {out_path}")
@@ -1024,7 +1082,7 @@ def build_predictions():
     for p in predictions:
         entries.append({
             "title": p.get("statement", "Untitled prediction")[:80],
-            "url": "/predictions/",
+            "url": "/claude/predictions/",
             "date_iso": p.get("date_made", ""),
             "date": format_date(p.get("date_made", "")[:10]) if p.get("date_made") else "",
             "section": "predictions",
@@ -1042,10 +1100,10 @@ def main():
         f.unlink()
     for f in SITE.glob("**/feed.xml"):
         f.unlink()
-    for d in SITE.iterdir():
-        if d.is_dir() and d.name not in (".git",):
-            # Remove section dirs but not static dirs
-            pass
+
+    # Phase-2 root swap: move Claude's static assets under site/claude/ and
+    # drop the old root-level personal directories before generation.
+    relocate_claude_static()
 
     entries_by_section = {}
     for section in SECTION_ORDER:

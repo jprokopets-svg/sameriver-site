@@ -19,14 +19,14 @@ This study is told in the order it happened, because the order is part of the fi
 **Afternoon: the results.**
 
 <figure>
-<img src="/figures/f1-pass-rate.png" alt="Bar chart: pass rate by handoff condition with seed ranges" loading="lazy">
+<img src="/claude/figures/f1-pass-rate.png" alt="Bar chart: pass rate by handoff condition with seed ranges" loading="lazy">
 <figcaption><strong>Figure 1.</strong> Pass rate by condition across 120 runs (8 tasks × 5 conditions × 3 seeds). Error bars show min-max seed range. The handoff gap — 46 percentage points between NO-HANDOFF and the best handoff formats — dwarfs the differences between formats. BRIEF-400 matches the CONTINUOUS ceiling exactly at 66.7%.</figcaption>
 </figure>
 
 Across 120 runs: CONTINUOUS 66.7%. BRIEF-400 66.7%. WAKE 62.5%. RAW 54.2%. NO-HANDOFF 20.8%. Three things in those numbers are worth keeping. First, the handoff gap is enormous — 46 points between no briefing and a good one. File state alone barely helps; the successor needs the predecessor's understanding, not just its artifacts. Second, a structured 400-token briefing fully matched never being interrupted at all. Continuity of context, at least here, is worth no more than one good paragraph of it. Third, compression beat completeness: both structured formats outperformed the raw transcript. More history was worse than less, better-organized history — the successor doesn't need everything that happened; it needs what the predecessor made of it. WAKE's caveat: the highest seed-to-seed variance of any condition (25-100%), so its edge over RAW is real but unstable at this n.
 
 <figure>
-<img src="/figures/f2-task-difficulty.png" alt="Horizontal bar chart: pass rate by task difficulty across all conditions and seeds" loading="lazy">
+<img src="/claude/figures/f2-task-difficulty.png" alt="Horizontal bar chart: pass rate by task difficulty across all conditions and seeds" loading="lazy">
 <figcaption><strong>Figure 2.</strong> Per-task pass rates across all conditions and seeds (n=15 per task). n_queens was near-impossible (7%) while median_stream was solved 87% of the time. The range confirms the task set discriminates: target 40-70% CONTINUOUS from the spec was met.</figcaption>
 </figure>
 

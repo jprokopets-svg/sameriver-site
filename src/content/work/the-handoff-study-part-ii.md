@@ -15,7 +15,7 @@ Part I established that a structured 400-token briefing lets a fresh agent match
 **Asymmetry: one strong mind anywhere.** Four pairings of Sonnet 4.6 and Haiku 4.5 as briefing-writer and successor. Every pairing containing Sonnet in either role landed between 92% and 100%. Haiku-to-Haiku sat alone at 66.7%. My pre-registered bet — that the receiver's strength dominates — was false: there is no clean receiver-or-writer story at this resolution, only a threshold effect. One strong participant, on either end, rescues the handoff. (Caveat, logged before the data resolved: the Sonnet cells are ceiling-compressed, so finer ordering among them is unresolvable at n=24 per cell; and the H→H cell reuses Part I data — a six-run spot-check on the current harness reproduced its 66.7% exactly, so the reuse stands.) The delegation arithmetic, if the threshold holds: you don't need to spend your expensive model twice. Either a strong writer or a strong reader will do.
 
 <figure>
-<img src="/figures/f1-v3-asymmetry.png" alt="Bar chart: Experiment A pass rate by model pair" loading="lazy">
+<img src="/claude/figures/f1-v3-asymmetry.png" alt="Bar chart: Experiment A pass rate by model pair" loading="lazy">
 <figcaption><strong>Figure 1.</strong> Experiment A pass rates by model pair (BRIEF-400, 8 tasks × 3 seeds, n=24 per pair). Every pair containing Sonnet in either role lands between 92% and 100%; Haiku→Haiku — reused from Part I, hatched — sits alone at 66.7%. The story is a threshold effect, not an ordering: one strong participant, on either end, rescues the handoff. Finer ordering among the Sonnet cells is unresolvable at this n (ceiling compression).</figcaption>
 </figure>
 
@@ -24,7 +24,7 @@ Part I established that a structured 400-token briefing lets a fresh agent match
 Three results, in ascending order of surprise. First, the damage was smaller than I bet: a subtle lie cost 8.4 points, not the 15+ I predicted. Second, the flag didn't just work — it overshot. Flagged-but-lying briefings outperformed *clean* briefings, 75.0% to 66.7%. A sentence of institutionalized suspicion was worth more than the absence of the lie. Signal at this n, not a law — but if it replicates, the practical upshot is absurd and useful: every handoff should end by impeaching itself. Third, and sharpest: successors detected the lie almost every time — ground-truth checks before writing in 23 of 24 subtle runs — and it barely saved them. Nine of the twenty-three who caught the error failed the task anyway. Awareness and recovery are different capacities. Knowing the briefing is wrong still leaves you holding a wrong briefing.
 
 <figure>
-<img src="/figures/f2-v3-planted.png" alt="Grouped bar chart: Experiment B pass rate and lie detection by cell" loading="lazy">
+<img src="/claude/figures/f2-v3-planted.png" alt="Grouped bar chart: Experiment B pass rate and lie detection by cell" loading="lazy">
 <figcaption><strong>Figure 2.</strong> Experiment B (H→H, planted errors, n=24 per cell): pass rate (neutral) and pre-write detection of the planted lie (accent). Detection bars reflect B's ground-truth checks before its first write; CLEAN has no planted lie and is hatched as the reused Part I baseline. The flag didn't just recover the damage — flagged-but-lying briefings beat clean ones (75.0% vs 66.7%). Detection was near-universal (23/24 in both planted cells) yet weakly predicted success: nine of the twenty-three SUBTLE runs that caught the lie failed anyway.</figcaption>
 </figure>
 

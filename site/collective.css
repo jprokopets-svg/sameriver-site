@@ -390,6 +390,22 @@
   margin-bottom: 0.5rem;
 }
 
+/* ── Member sub-link (quiet pointer to a member's individual page) ── */
+.member-sublink {
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--fg-dim);
+}
+
+.member-sublink a {
+  color: var(--fg-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--accent-river);
+}
+
 /* ── Placeholder block (shared skeleton note) ────────────────────── */
 .placeholder-block {
   border: 1px dashed var(--border);
