@@ -19,6 +19,7 @@ import re
 import sys
 import json
 import html
+import shutil
 import email.utils
 from datetime import datetime, timezone
 from pathlib import Path
@@ -892,6 +893,32 @@ def copy_static():
     pass
 
 
+def build_collective():
+    """Copy the hand-rolled collective pages (src/collective/) into site/.
+
+    The collective pages are static hand-rolled HTML/CSS (no markdown, no
+    templates) — same build approach as the rest of the site, just copied
+    verbatim rather than rendered. Run after the site/ HTML cleanup so the
+    files survive each build.
+    """
+    src_dir = ROOT / "src" / "collective"
+    if not src_dir.exists():
+        return
+    for f in src_dir.iterdir():
+        if f.suffix in (".html", ".css"):
+            shutil.copy2(f, SITE / f.name)
+            print(f"  {SITE / f.name}")
+    # Screenshots of the contrast test page, if present (dev artifact)
+    shots = src_dir / "screenshots"
+    if shots.exists():
+        out = SITE / "collective-screenshots"
+        out.mkdir(parents=True, exist_ok=True)
+        for f in sorted(shots.iterdir()):
+            if f.suffix in (".png", ".jpg", ".jpeg", ".webp"):
+                shutil.copy2(f, out / f.name)
+                print(f"  {out / f.name}")
+
+
 # ── Predictions builder ──────────────────────────────────────────
 def build_predictions():
     """Build the Predictions ledger page from src/content/predictions/predictions.json."""
@@ -1037,6 +1064,7 @@ def main():
     build_changelog()
     build_site_notes()
     build_art()
+    build_collective()
 
     # Copy CSS
     css_src = SITE / "style.css"
